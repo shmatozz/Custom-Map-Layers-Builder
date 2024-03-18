@@ -8,18 +8,19 @@ import javafx.scene.web.WebView;
 import javafx.util.Pair;
 import netscape.javascript.JSObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class BuilderController {
 
     @FXML
-    private WebView webView;
+    private WebView webView = new WebView();
 
     @FXML
     private Button resetMapButton;
 
     private final ArrayList<Pair<Double, Double>> currentCoords = new ArrayList<>();
+    private final Class<JavaCallback> callbacks = JavaCallback.class;
 
     public void initialize() {
         WebEngine webEngine = webView.getEngine();
@@ -31,7 +32,6 @@ public class BuilderController {
                         // Page loaded successfully
                         System.out.println("Page loaded successfully!");
 
-                        // Get the window object and add the JavaCallback object to it
                         JSObject window = (JSObject) webEngine.executeScript("window");
                         window.setMember("javaCallback", new JavaCallback());
                     }
@@ -39,6 +39,13 @@ public class BuilderController {
 
         // Load the HTML file containing the map
         webEngine.load(getClass().getResource("maps.html").toExternalForm());
+
+        webEngine.setOnAlert(event -> {
+            if (Objects.equals(event.getData(), "undefined")) {
+                JSObject window = (JSObject) webEngine.executeScript("window");
+                window.setMember("javaCallback", new JavaCallback());
+            }
+        });
     }
 
     // Click handler for the map
