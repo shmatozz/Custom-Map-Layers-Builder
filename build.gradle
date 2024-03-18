@@ -17,8 +17,8 @@ ext {
   junitVersion = '5.9.2'
 }
 
-sourceCompatibility = '21'
-targetCompatibility = '21'
+sourceCompatibility = '18'
+targetCompatibility = '18'
 
 tasks.withType(JavaCompile) {
   options.encoding = 'UTF-8'
@@ -26,17 +26,18 @@ tasks.withType(JavaCompile) {
 
 application {
   mainModule = 'com.example.custommaplayersbuilder'
-  mainClass = 'com.example.custommaplayersbuilder.HelloApplication'
+  mainClass = 'com.example.custommaplayersbuilder.BuilderApplication'
 }
 
 javafx {
   version = '21-ea+24'
-  modules = ['javafx.controls', 'javafx.fxml']
+  modules = ['javafx.controls', 'javafx.fxml', 'javafx.web']
 }
 
 dependencies {
   implementation('org.controlsfx:controlsfx:11.1.2')
   implementation('org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0')
+  implementation('org.openjfx:javafx-web:16')
 
   testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
