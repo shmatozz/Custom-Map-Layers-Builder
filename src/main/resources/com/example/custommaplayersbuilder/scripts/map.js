@@ -33,6 +33,25 @@ async function initMap() {
     });
     map.addChild(listener);
 
+    const line = new YMapFeature({
+        geometry: {
+            type: 'LineString',
+            coordinates: points
+        },
+        style: {stroke: [{color: 'rgba(252,0,0,0.66)', width: 4}]}
+    });
+
+    const polygon = new YMapFeature({
+        geometry: {
+            type: 'Polygon',
+            coordinates: [points]
+        },
+        style: {stroke: [{color: 'rgba(252,0,0,0.66)', width: 4}], fill: 'rgba(252,0,0,0.34)'}
+    });
+
+    map.addChild(line);
+    map.addChild(polygon);
+
     function onClickListenerHandler(object, event) {
         const coords = event.coordinates;
         console.log(points)
@@ -46,15 +65,24 @@ async function initMap() {
             document.getElementById('routeButton').style.display = 'block';
             document.getElementById('lineButton').style.display = 'block';
             document.getElementById('lineButton').addEventListener("click", () => {
-                const line = new YMapFeature({
+                line.update({
                     geometry: {
                         type: 'LineString',
                         coordinates: points
-                    },
-                    style: {stroke: [{color: 'rgba(252,0,0,0.66)', width: 4}]}
+                    }
                 });
-                map.addChild(line);
                 console.log(line);
+            });
+        } if (points.length > 2) {
+            document.getElementById('polygonButton').style.display = 'block';
+            document.getElementById('polygonButton').addEventListener("click", () => {
+                polygon.update({
+                    geometry: {
+                        type: 'Polygon',
+                        coordinates: [points]
+                    }
+                });
+                console.log(polygon);
             });
         }
         map.addChild(marker);
