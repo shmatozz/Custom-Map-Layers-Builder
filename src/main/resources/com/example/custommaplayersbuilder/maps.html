@@ -4,72 +4,12 @@
     <title>Быстрый старт. Размещение интерактивной карты на странице</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <script src="https://api-maps.yandex.ru/v3/?apikey=4ea655dd-c6a3-417c-b49f-c294a34336df&lang=ru_RU"></script>
-    <script>
-        initMap();
-
-        async function initMap() {
-            await ymaps3.ready;
-
-            const {YMapDefaultMarker} = await ymaps3.import('@yandex/ymaps3-markers@0.0.1');
-
-            const {
-                YMap,
-                YMapDefaultSchemeLayer,
-                YMapListener,
-                YMapDefaultFeaturesLayer
-            } = ymaps3;
-
-            const map = new YMap(
-                document.getElementById('map'),
-                {
-                    location: {
-                        center: [43.99029890743777, 56.315420929026374],
-                        zoom: 12
-                    }
-                },
-                [
-                    new YMapDefaultSchemeLayer({}),
-                    new YMapDefaultFeaturesLayer({})
-                ]
-            );
-
-            const listener = new YMapListener({
-                onClick: onClickListenerHandler
-            });
-            map.addChild(listener);
-
-            function onClickListenerHandler(object, event) {
-                // Получаем координаты клика
-                const coords = event.coordinates;
-                // Вызываем метод JavaFX с передачей координат
-                console.log(coords);
-
-                const marker = new YMapDefaultMarker({
-                    coordinates: coords,
-                    color: '#bd0000'
-                });
-                map.addChild(marker);
-
-                alert(window.javaCallback)
-                window.javaCallback.addPoint(coords[0], coords[1]);
-            }
-        }
-    </script>
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-        }
-        #map {
-            width: 100%;
-            height: 100%;
-        }
-    </style>
+    <script src="scripts/map.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles/map.css">
 </head>
 
 <body>
-<div id="map"></div>
+    <div id="map"></div>
+    <button id="routeButton" onClick="buildRoute()">Построить маршрут</button>
 </body>
 </html>
