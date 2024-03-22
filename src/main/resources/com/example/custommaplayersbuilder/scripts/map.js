@@ -10,7 +10,8 @@ async function initMap() {
         YMap,
         YMapDefaultSchemeLayer,
         YMapListener,
-        YMapDefaultFeaturesLayer
+        YMapDefaultFeaturesLayer,
+        YMapFeature
     } = ymaps3;
 
     const map = new YMap(
@@ -40,12 +41,21 @@ async function initMap() {
             coordinates: coords,
             color: '#bd0000'
         });
-        points.push(marker);
-        if (points.length > 2) {
-            map.removeChild(points[0]);
-            points.shift();
-        } else if (points.length === 2) {
+        points.push(coords);
+        if (points.length === 2) {
             document.getElementById('routeButton').style.display = 'block';
+            document.getElementById('lineButton').style.display = 'block';
+            document.getElementById('lineButton').addEventListener("click", () => {
+                const line = new YMapFeature({
+                    geometry: {
+                        type: 'LineString',
+                        coordinates: points
+                    },
+                    style: {stroke: [{color: 'rgba(252,0,0,0.66)', width: 4}]}
+                });
+                map.addChild(line);
+                console.log(line);
+            });
         }
         map.addChild(marker);
 
@@ -85,7 +95,7 @@ function buildRoute() {
     const endPoint = points[1];
 
     // Запрашиваем маршрут между начальной и конечной точками
-    fetchRoute(startPoint.coordinates, endPoint.constructor).then(routeHandler);
+    fetchRoute(startPoint, endPoint).then(routeHandler);
 }
 
 // Обработчик полученного маршрута
