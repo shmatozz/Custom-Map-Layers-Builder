@@ -21,8 +21,9 @@ public class BuilderController {
     @FXML
     private Button resetMapButton;
 
-    private final ArrayList<Pair<Double, Double>> currentCoords = new ArrayList<>();
     private double[][] currentRoute = {};
+    private double[][] currentLine = {};
+    private double[][] currentPolygon = {};
     private final Class<JavaCallback> callbacks = JavaCallback.class;
 
     public void initialize() {
@@ -57,19 +58,26 @@ public class BuilderController {
      */
     public class JavaCallback {
         /**
-         * Receive point by Lat Lng coordinates
-         * @param latitude - latitude of point
-         * @param longitude - longitude of point
+         * Receiving route coordinates array
+         * @param object - JSObject string with coords
          */
-        public void addPoint(double latitude, double longitude) {
-            currentCoords.add(new Pair<>(latitude, longitude));
-            System.out.println("Latitude: " + latitude + ", Longitude: " + longitude);
+        public void addRoute(Object object) {
+            currentRoute = parseObject(object.toString());
+            System.out.println(Arrays.deepToString(currentRoute));
         }
 
-        public void addRoute(Object array) {
-            String arrayString = array.toString();
+        public void addLine(Object object) {
+            currentLine = parseObject(object.toString());
+            System.out.println(Arrays.deepToString(currentLine));
+        }
 
-            String[] coordinatesArray = arrayString.split(",");
+        public void addPolygon(Object object) {
+            currentPolygon = parseObject(object.toString());
+            System.out.println(Arrays.deepToString(currentPolygon));
+        }
+
+        private double[][] parseObject(String object) {
+            String[] coordinatesArray = object.split(",");
             int numPoints = coordinatesArray.length / 2;
             double[][] points = new double[numPoints][2];
 
@@ -80,14 +88,12 @@ public class BuilderController {
                 points[i][1] = y;
             }
 
-            currentRoute = points;
-            System.out.println(Arrays.deepToString(points));
+            return points;
         }
     }
 
     @FXML
     private void onResetMapButton() {
         webView.getEngine().load(getClass().getResource("maps.html").toExternalForm());
-        currentCoords.clear();
     }
 }

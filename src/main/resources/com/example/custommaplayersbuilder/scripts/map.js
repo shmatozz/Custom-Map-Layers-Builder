@@ -84,10 +84,16 @@ function initMap() {
     function buildLine() {
         line.geometry.setCoordinates(points);
         map.geoObjects.add(line);
+
+        alert(window.javaCallback);
+        window.javaCallback.addLine(points);
     }
 
     function buildPolygon() {
         polygon.geometry.setCoordinates([points]);
         map.geoObjects.add(polygon);
+
+        alert(window.javaCallback);
+        window.javaCallback.addPolygon(points);
     }
 }
