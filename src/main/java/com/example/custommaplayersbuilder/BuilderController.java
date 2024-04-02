@@ -8,7 +8,9 @@ import javafx.scene.web.WebView;
 import javafx.util.Pair;
 import netscape.javascript.JSObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class BuilderController {
@@ -20,6 +22,7 @@ public class BuilderController {
     private Button resetMapButton;
 
     private final ArrayList<Pair<Double, Double>> currentCoords = new ArrayList<>();
+    private double[][] currentRoute = {};
     private final Class<JavaCallback> callbacks = JavaCallback.class;
 
     public void initialize() {
@@ -48,12 +51,37 @@ public class BuilderController {
         });
     }
 
-    // Click handler for the map
+
+    /**
+     * Class to process coordinates receiving from map
+     */
     public class JavaCallback {
+        /**
+         * Receive point by Lat Lng coordinates
+         * @param latitude - latitude of point
+         * @param longitude - longitude of point
+         */
         public void addPoint(double latitude, double longitude) {
-            // Handle the received coordinates
             currentCoords.add(new Pair<>(latitude, longitude));
             System.out.println("Latitude: " + latitude + ", Longitude: " + longitude);
+        }
+
+        public void addRoute(Object array) {
+            String arrayString = array.toString();
+
+            String[] coordinatesArray = arrayString.split(",");
+            int numPoints = coordinatesArray.length / 2;
+            double[][] points = new double[numPoints][2];
+
+            for (int i = 0; i < numPoints; i++) {
+                double x = Double.parseDouble(coordinatesArray[2 * i]);
+                double y = Double.parseDouble(coordinatesArray[2 * i + 1]);
+                points[i][0] = x;
+                points[i][1] = y;
+            }
+
+            currentRoute = points;
+            System.out.println(Arrays.deepToString(points));
         }
     }
 

@@ -48,14 +48,37 @@ function initMap() {
             return;
         }
 
+        ymaps.route(points).then(function (route) {
+            map.geoObjects.add(route);
+            var wayPoints = route.getWayPoints(),
+                lastPoint = wayPoints.getLength() - 1;
+            // Задаем стиль метки - иконки будут красного цвета, и
+            // их изображения будут растягиваться под контент.
+            wayPoints.options.set('preset', 'islands#redStretchyIcon');
+            // Задаем контент меток в начальной и конечной точках.
+            wayPoints.get(0).properties.set('iconContent', 'Точка отправления');
+            wayPoints.get(lastPoint).properties.set('iconContent', 'Точка прибытия');
 
-        const multiRoute = new ymaps.multiRouter.MultiRoute({
-            referencePoints: points
-        }, {
-            boundsAutoApply: true
+            var way,
+                segments;
+
+            var allCoordinates = [];
+            // Получаем массив путей.
+            for (var i = 0; i < route.getPaths().getLength(); i++) {
+                way = route.getPaths().get(i);
+                segments = way.getSegments();
+                for (var j = 0; j < segments.length; j++) {
+                    var segmentCoordinates = segments[j].getCoordinates();
+                    allCoordinates = allCoordinates.concat(segmentCoordinates);
+                }
+            }
+
+            console.log(allCoordinates);
+            alert(window.javaCallback);
+            window.javaCallback.addRoute(allCoordinates);
+        }, function (error) {
+            alert('Возникла ошибка: ' + error.message);
         });
-
-        map.geoObjects.add(multiRoute);
     }
 
     function buildLine() {
