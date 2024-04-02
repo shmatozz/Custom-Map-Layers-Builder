@@ -5,13 +5,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.util.Pair;
 import netscape.javascript.JSObject;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 public class BuilderController {
 
@@ -24,9 +22,8 @@ public class BuilderController {
     private double[][] currentRoute = {};
     private double[][] currentLine = {};
     private double[][] currentPolygon = {};
-    private final Class<JavaCallback> callbacks = JavaCallback.class;
 
-    public void initialize() {
+    public void initialize() throws IOException, ExecutionException, InterruptedException {
         WebEngine webEngine = webView.getEngine();
 
         // Add a listener for page load state
