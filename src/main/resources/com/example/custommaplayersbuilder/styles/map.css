@@ -13,20 +13,3 @@ html, body {
     width: 100%;
     height: 100%;
 }
-
-.button-container {
-    position: absolute;
-    bottom: 10px;
-    display: flex;
-    gap: 10px;
-}
-
-.button-container button {
-    height: 40px;
-    font-family: Inter, serif;
-    font-size: 1em;
-    border-radius: 4px;
-    border: 2px solid;
-    background-color: white;
-    display: none;
-}

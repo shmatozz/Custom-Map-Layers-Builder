@@ -13,8 +13,10 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-db.collection("geofiles").get().then((querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-        console.log(`${doc.id} => ${doc.data()}`);
-    });
-});
+export function sendLine(coordinates) {
+    console.log(coordinates)
+}
+
+export function sendPolygon(coordinates) {
+    console.log(coordinates)
+}
