@@ -3,6 +3,7 @@ package com.example.custommaplayersbuilder;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
@@ -19,6 +20,9 @@ public class BuilderController {
     @FXML
     private Button resetMapButton;
 
+    @FXML
+    private Label log;
+
     private double[][] currentRoute = {};
     private double[][] currentLine = {};
     private double[][] currentPolygon = {};
@@ -33,7 +37,7 @@ public class BuilderController {
                 (observable, oldValue, newValue) -> {
                     if (newValue == Worker.State.SUCCEEDED) {
                         // Page loaded successfully
-                        System.out.println("Page loaded successfully!");
+                        javaCallback.log("Page loaded successfully!");
 
                         JSObject window = (JSObject) webEngine.executeScript("window");
                         window.setMember("javaCallback", javaCallback);
@@ -78,6 +82,7 @@ public class BuilderController {
 
         public void log(String text) {
             System.out.println(text);
+            log.setText(text);
         }
 
         private double[][] parseObject(String object) {

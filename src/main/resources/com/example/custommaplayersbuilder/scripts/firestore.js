@@ -13,7 +13,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-window.sendLine = function(coordinates, docName = "line") {
+window.sendLine = function(coordinates, docName = "Line") {
     db.collection("geofiles").doc(docName).set({
         type: "Feature",
         geometry: {
@@ -24,25 +24,29 @@ window.sendLine = function(coordinates, docName = "line") {
             name: docName
         }
     }).then(() => {
-        console.log("Document successfully written!");
+        alert(window.javaCallback);
+        window.javaCallback.log(docName + " successfully written!");
     }).catch((error) => {
-        console.error("Error writing document: ", error);
+        alert(window.javaCallback);
+        window.javaCallback.log("Error writing document: ", error);
     });
 }
 
 window.sendPolygon = function(coordinates) {
-    db.collection("geofiles").doc("polygon").set({
+    db.collection("geofiles").doc("Polygon").set({
         type: "Feature",
         geometry: {
             type: "Polygon",
             coordinates: coordinates.toString()
         },
         properties: {
-            name: "polygon"
+            name: "Polygon"
         }
     }).then(() => {
-        console.log("Document successfully written!");
+        alert(window.javaCallback);
+        window.javaCallback.log("Polygon successfully written!");
     }).catch((error) => {
-        console.error("Error writing document: ", error);
+        alert(window.javaCallback);
+        window.javaCallback.log("Error writing document: ", error);
     });
 }

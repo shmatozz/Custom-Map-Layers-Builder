@@ -86,14 +86,15 @@ function buildRoute() {
         const sendRouteButton =  document.getElementById('sendRouteButton')
         sendRouteButton.style.display = 'block';
         sendRouteButton.addEventListener('click', async function () {
-            window.sendLine(allCoordinates, "route");
+            window.sendLine(allCoordinates, "Route");
         });
 
-        console.log(allCoordinates);
         alert(window.javaCallback);
         window.javaCallback.addRoute(allCoordinates);
+        window.javaCallback.log("Route was built");
     }, function (error) {
-        alert('Возникла ошибка: ' + error.message);
+        alert(window.javaCallback);
+        window.javaCallback.log("Error: " + error.message);
     });
 }
 
@@ -109,6 +110,7 @@ function buildLine() {
 
     alert(window.javaCallback);
     window.javaCallback.addLine(points);
+    window.javaCallback.log("Line was built");
 }
 
 function buildPolygon() {
@@ -123,4 +125,5 @@ function buildPolygon() {
 
     alert(window.javaCallback);
     window.javaCallback.addPolygon(points);
+    window.javaCallback.log("Polygon was built");
 }

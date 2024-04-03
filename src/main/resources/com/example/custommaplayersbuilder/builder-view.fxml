@@ -11,4 +11,5 @@
     </padding>
     <WebView fx:id="webView" minHeight="-Infinity" minWidth="-Infinity" VBox.vgrow="ALWAYS" />
    <Button mnemonicParsing="false" onAction="#onResetMapButton" prefHeight="25.0" prefWidth="130.0" text="Reset Map" />
+   <Label fx:id="log" />
 </VBox>
