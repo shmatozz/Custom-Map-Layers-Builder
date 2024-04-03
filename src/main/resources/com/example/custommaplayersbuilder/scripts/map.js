@@ -1,5 +1,3 @@
-import {sendLine, sendPolygon} from "./firestore.js";
-
 ymaps.ready(initMap);
 
 const points = [];
@@ -7,15 +5,6 @@ let map;
 let line;
 let polygon;
 let route;
-
-// Get buttons
-const buildRouteButton =  document.getElementById('routeButton')
-const buildLineButton =  document.getElementById('lineButton')
-const buildPolygonButton =  document.getElementById('polygonButton')
-const sendRouteButton =  document.getElementById('sendRouteButton')
-const sendLineButton =  document.getElementById('sendLineButton')
-const sendPolygonButton =  document.getElementById('sendPolygonButton')
-
 
 function initMap() {
     map = new ymaps.Map('map', {
@@ -46,12 +35,17 @@ function initMap() {
         map.geoObjects.add(marker);
 
         if (points.length >= 2) {
+            const buildRouteButton =  document.getElementById('routeButton')
+            const buildLineButton =  document.getElementById('lineButton')
+
             buildRouteButton.style.display = 'block';
             buildRouteButton.addEventListener('click', buildRoute);
             buildLineButton.style.display = 'block';
             buildLineButton.addEventListener('click', buildLine);
         }
         if (points.length > 2) {
+            const buildPolygonButton =  document.getElementById('polygonButton')
+
             buildPolygonButton.style.display = 'block';
             buildPolygonButton.addEventListener('click', buildPolygon);
         }
@@ -89,9 +83,10 @@ function buildRoute() {
             }
         }
 
+        const sendRouteButton =  document.getElementById('sendRouteButton')
         sendRouteButton.style.display = 'block';
-        sendRouteButton.addEventListener('click', function() {
-            sendLine(allCoordinates, "route");
+        sendRouteButton.addEventListener('click', async function () {
+            window.sendLine(allCoordinates, "route");
         });
 
         console.log(allCoordinates);
@@ -106,9 +101,10 @@ function buildLine() {
     line.geometry.setCoordinates(points);
     map.geoObjects.add(line);
 
+    const sendLineButton =  document.getElementById('sendLineButton')
     sendLineButton.style.display = 'block';
-    sendLineButton.addEventListener('click', function() {
-        sendLine(line.geometry.getCoordinates());
+    sendLineButton.addEventListener('click', async function () {
+        window.sendLine(line.geometry.getCoordinates());
     });
 
     alert(window.javaCallback);
@@ -119,9 +115,10 @@ function buildPolygon() {
     polygon.geometry.setCoordinates([points]);
     map.geoObjects.add(polygon);
 
+    const sendPolygonButton =  document.getElementById('sendPolygonButton')
     sendPolygonButton.style.display = 'block';
-    sendPolygonButton.addEventListener('click', function() {
-        sendPolygon(polygon.geometry.getCoordinates());
+    sendPolygonButton.addEventListener('click', async function () {
+        window.sendPolygon(polygon.geometry.getCoordinates())
     });
 
     alert(window.javaCallback);

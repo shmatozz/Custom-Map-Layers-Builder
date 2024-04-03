@@ -23,6 +23,8 @@ public class BuilderController {
     private double[][] currentLine = {};
     private double[][] currentPolygon = {};
 
+    private final JavaCallback javaCallback = new JavaCallback();
+
     public void initialize() throws IOException, ExecutionException, InterruptedException {
         WebEngine webEngine = webView.getEngine();
 
@@ -34,17 +36,18 @@ public class BuilderController {
                         System.out.println("Page loaded successfully!");
 
                         JSObject window = (JSObject) webEngine.executeScript("window");
-                        window.setMember("javaCallback", new JavaCallback());
+                        window.setMember("javaCallback", javaCallback);
                     }
                 });
 
         // Load the HTML file containing the map
         webEngine.load(getClass().getResource("maps.html").toExternalForm());
+        webEngine.setJavaScriptEnabled(true);
 
         webEngine.setOnAlert(event -> {
             if (Objects.equals(event.getData(), "undefined")) {
                 JSObject window = (JSObject) webEngine.executeScript("window");
-                window.setMember("javaCallback", new JavaCallback());
+                window.setMember("javaCallback", javaCallback);
             }
         });
     }
@@ -71,6 +74,10 @@ public class BuilderController {
         public void addPolygon(Object object) {
             currentPolygon = parseObject(object.toString());
             System.out.println(Arrays.deepToString(currentPolygon));
+        }
+
+        public void log(String text) {
+            System.out.println(text);
         }
 
         private double[][] parseObject(String object) {

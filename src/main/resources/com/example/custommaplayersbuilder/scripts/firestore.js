@@ -13,7 +13,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-export function sendLine(coordinates, docName = "line") {
+window.sendLine = function(coordinates, docName = "line") {
     db.collection("geofiles").doc(docName).set({
         type: "Feature",
         geometry: {
@@ -30,7 +30,7 @@ export function sendLine(coordinates, docName = "line") {
     });
 }
 
-export function sendPolygon(coordinates) {
+window.sendPolygon = function(coordinates) {
     db.collection("geofiles").doc("polygon").set({
         type: "Feature",
         geometry: {
