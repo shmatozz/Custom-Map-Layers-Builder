@@ -91,7 +91,7 @@ function buildRoute() {
 
         sendRouteButton.style.display = 'block';
         sendRouteButton.addEventListener('click', function() {
-            sendLine(allCoordinates);
+            sendLine(allCoordinates, "route");
         });
 
         console.log(allCoordinates);

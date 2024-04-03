@@ -13,10 +13,36 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-export function sendLine(coordinates) {
-    console.log(coordinates)
+export function sendLine(coordinates, docName = "line") {
+    db.collection("geofiles").doc(docName).set({
+        type: "Feature",
+        geometry: {
+            type: "LineString",
+            coordinates: coordinates.toString()
+        },
+        properties: {
+            name: docName
+        }
+    }).then(() => {
+        console.log("Document successfully written!");
+    }).catch((error) => {
+        console.error("Error writing document: ", error);
+    });
 }
 
 export function sendPolygon(coordinates) {
-    console.log(coordinates)
+    db.collection("geofiles").doc("polygon").set({
+        type: "Feature",
+        geometry: {
+            type: "Polygon",
+            coordinates: coordinates.toString()
+        },
+        properties: {
+            name: "polygon"
+        }
+    }).then(() => {
+        console.log("Document successfully written!");
+    }).catch((error) => {
+        console.error("Error writing document: ", error);
+    });
 }
