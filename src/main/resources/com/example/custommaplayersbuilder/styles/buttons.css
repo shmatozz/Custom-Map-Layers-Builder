@@ -12,6 +12,13 @@
     gap: 10px;
 }
 
+.search-points-container {
+    position: absolute;
+    top: 50px;
+    left: 10px;
+    display: flex;
+}
+
 button {
     height: 40px;
     font-family: Inter, serif;

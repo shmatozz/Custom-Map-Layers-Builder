@@ -53,3 +53,23 @@ window.sendPolygon = function(coordinates, bounds) {
         window.javaCallback.log("Error writing document: ", error);
     });
 }
+
+window.sendPoints = function(coordinates, bounds, docName = "Points") {
+    db.collection("geofiles").doc(docName).set({
+        type: "Feature",
+        geometry: {
+            type: "MultiPoint",
+            coordinates: coordinates.toString()
+        },
+        properties: {
+            name: docName,
+            bbox: [bounds[0][1], bounds[0][0], bounds[1][1], bounds[1][0]]
+        }
+    }).then(() => {
+        alert(window.javaCallback);
+        window.javaCallback.log("Points successfully written!");
+    }).catch((error) => {
+        alert(window.javaCallback);
+        window.javaCallback.log("Error writing document: ", error);
+    });
+}

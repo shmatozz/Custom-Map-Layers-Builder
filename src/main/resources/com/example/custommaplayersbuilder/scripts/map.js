@@ -7,25 +7,48 @@ let polygon;
 let route;
 
 function initMap() {
+    var searchControl = new ymaps.control.SearchControl({
+        options: {
+            provider: 'yandex#search',
+            noPopup: true,
+            results: 10
+        }
+    });
+
     map = new ymaps.Map('map', {
         center: [56.315420929026374, 43.99029890743777],
-        zoom: 12
+        zoom: 12,
+        controls: [searchControl]
     });
 
     line = new ymaps.Polyline([], {}, {
         strokeColor: '#ff0000',
-        strokeWidth: 4,
-        draggable: true
+        strokeWidth: 4
     });
 
     polygon = new ymaps.Polygon([[]], {}, {
         strokeColor: '#ff0000',
         strokeWidth: 4,
-        fillColor: 'rgba(252,0,0,0.34)',
-        draggable: true
+        fillColor: 'rgba(252,0,0,0.34)'
     });
 
     map.events.add('click', onClickListenerHandler);
+
+    searchControl.events.add('submit', function () {
+        const searchPointsButton =  document.getElementById('getSearchPointsButton')
+
+        searchPointsButton.style.display = 'block';
+        searchPointsButton.addEventListener('click', function () {
+            var geoResults = searchControl.getResultsArray();
+            var coordResults = [];
+            for (var i = 0; i < geoResults.length; i++) {
+                var resultCoordinates = geoResults[i].geometry.getCoordinates();
+                coordResults.push(resultCoordinates);
+            }
+
+            window.sendPoints(coordResults, map.getBounds(), searchControl.getRequestString());
+        });
+    }, this);
 
     function onClickListenerHandler(event) {
         var coords = event.get('coords');
@@ -60,14 +83,8 @@ function buildRoute() {
 
     ymaps.route(points).then(function (route) {
         map.geoObjects.add(route);
-        var wayPoints = route.getWayPoints(),
-            lastPoint = wayPoints.getLength() - 1;
-        // Задаем стиль метки - иконки будут красного цвета, и
-        // их изображения будут растягиваться под контент.
+        var wayPoints = route.getWayPoints();
         wayPoints.options.set('preset', 'islands#redStretchyIcon');
-        // Задаем контент меток в начальной и конечной точках.
-        wayPoints.get(0).properties.set('iconContent', 'Точка отправления');
-        wayPoints.get(lastPoint).properties.set('iconContent', 'Точка прибытия');
 
         var way,
             segments;
@@ -83,7 +100,7 @@ function buildRoute() {
 
         const sendRouteButton =  document.getElementById('sendRouteButton')
         sendRouteButton.style.display = 'block';
-        sendRouteButton.addEventListener('click', async function () {
+        sendRouteButton.addEventListener('click', function () {
             window.sendLine(allCoordinates, way.geometry.getBounds(), "Route");
         });
 
@@ -102,7 +119,7 @@ function buildLine() {
 
     const sendLineButton =  document.getElementById('sendLineButton')
     sendLineButton.style.display = 'block';
-    sendLineButton.addEventListener('click', async function () {
+    sendLineButton.addEventListener('click', function () {
         window.sendLine(line.geometry.getCoordinates(), line.geometry.getBounds());
     });
 
@@ -117,7 +134,7 @@ function buildPolygon() {
 
     const sendPolygonButton =  document.getElementById('sendPolygonButton')
     sendPolygonButton.style.display = 'block';
-    sendPolygonButton.addEventListener('click', async function () {
+    sendPolygonButton.addEventListener('click', function () {
         window.sendPolygon(polygon.geometry.getCoordinates(), polygon.geometry.getBounds())
     });
 
