@@ -73,20 +73,18 @@ function buildRoute() {
             segments;
 
         var allCoordinates = [];
-        // Получаем массив путей.
-        for (var i = 0; i < route.getPaths().getLength(); i++) {
-            way = route.getPaths().get(i);
-            segments = way.getSegments();
-            for (var j = 0; j < segments.length; j++) {
-                var segmentCoordinates = segments[j].getCoordinates();
-                allCoordinates = allCoordinates.concat(segmentCoordinates);
-            }
+
+        way = route.getPaths().get(0);
+        segments = way.getSegments();
+        for (var j = 0; j < segments.length; j++) {
+            var segmentCoordinates = segments[j].getCoordinates();
+            allCoordinates = allCoordinates.concat(segmentCoordinates);
         }
 
         const sendRouteButton =  document.getElementById('sendRouteButton')
         sendRouteButton.style.display = 'block';
         sendRouteButton.addEventListener('click', async function () {
-            window.sendLine(allCoordinates, "Route");
+            window.sendLine(allCoordinates, way.geometry.getBounds(), "Route");
         });
 
         alert(window.javaCallback);
@@ -105,7 +103,7 @@ function buildLine() {
     const sendLineButton =  document.getElementById('sendLineButton')
     sendLineButton.style.display = 'block';
     sendLineButton.addEventListener('click', async function () {
-        window.sendLine(line.geometry.getCoordinates());
+        window.sendLine(line.geometry.getCoordinates(), line.geometry.getBounds());
     });
 
     alert(window.javaCallback);
@@ -120,7 +118,7 @@ function buildPolygon() {
     const sendPolygonButton =  document.getElementById('sendPolygonButton')
     sendPolygonButton.style.display = 'block';
     sendPolygonButton.addEventListener('click', async function () {
-        window.sendPolygon(polygon.geometry.getCoordinates())
+        window.sendPolygon(polygon.geometry.getCoordinates(), polygon.geometry.getBounds())
     });
 
     alert(window.javaCallback);

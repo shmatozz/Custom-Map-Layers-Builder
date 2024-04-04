@@ -13,7 +13,8 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-window.sendLine = function(coordinates, docName = "Line") {
+window.sendLine = function(coordinates, bounds, docName = "Line") {
+    console.log([bounds[0][0], bounds[0][1], bounds[1][0], bounds[1][1]])
     db.collection("geofiles").doc(docName).set({
         type: "Feature",
         geometry: {
@@ -21,7 +22,8 @@ window.sendLine = function(coordinates, docName = "Line") {
             coordinates: coordinates.toString()
         },
         properties: {
-            name: docName
+            name: docName,
+            bbox: [bounds[0][1], bounds[0][0], bounds[1][1], bounds[1][0]]
         }
     }).then(() => {
         alert(window.javaCallback);
@@ -32,7 +34,7 @@ window.sendLine = function(coordinates, docName = "Line") {
     });
 }
 
-window.sendPolygon = function(coordinates) {
+window.sendPolygon = function(coordinates, bounds) {
     db.collection("geofiles").doc("Polygon").set({
         type: "Feature",
         geometry: {
@@ -40,7 +42,8 @@ window.sendPolygon = function(coordinates) {
             coordinates: coordinates.toString()
         },
         properties: {
-            name: "Polygon"
+            name: "Polygon",
+            bbox: [bounds[0][1], bounds[0][0], bounds[1][1], bounds[1][0]]
         }
     }).then(() => {
         alert(window.javaCallback);
