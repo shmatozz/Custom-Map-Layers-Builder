@@ -12,7 +12,7 @@
       <padding>
          <Insets left="20.0" right="20.0" />
       </padding>
-      <Button id="Button" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="250.0" stylesheets="@styles/fxbuttons.css" text="Конвертировать в JSON">
+      <Button id="Button" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onConvertToJSON" prefHeight="40.0" prefWidth="250.0" stylesheets="@styles/fxbuttons.css" text="Конвертировать в JSON">
          <font>
             <Font name="Inter Regular" size="14.0" />
          </font>

@@ -7,10 +7,9 @@ import javafx.scene.control.Label;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
-import java.io.IOException;
+
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
 
 public class BuilderController {
 
@@ -19,6 +18,8 @@ public class BuilderController {
 
     @FXML
     private Button resetMapButton;
+    @FXML
+    private Button convertToJSON;
 
     @FXML
     private Label log;
@@ -26,10 +27,12 @@ public class BuilderController {
     private double[][] currentRoute = {};
     private double[][] currentLine = {};
     private double[][] currentPolygon = {};
+    private double[][] currentPoints = {};
 
     private final JavaCallback javaCallback = new JavaCallback();
+    private final Converter converter = new Converter();
 
-    public void initialize() throws IOException, ExecutionException, InterruptedException {
+    public void initialize() {
         WebEngine webEngine = webView.getEngine();
 
         // Add a listener for page load state
@@ -62,29 +65,46 @@ public class BuilderController {
      */
     public class JavaCallback {
         /**
-         * Receiving route coordinates array
-         * @param object - JSObject string with coords
+         * Receiving ROUTE coordinates array
+         * @param route - JSObject string with coords
          */
-        public void addRoute(Object object) {
-            currentRoute = parseObject(object.toString());
+        public void addRoute(Object route) {
+            currentRoute = parseObject(route.toString());
             System.out.println(Arrays.deepToString(currentRoute));
         }
 
-        public void addLine(Object object) {
-            currentLine = parseObject(object.toString());
+        /**
+         * Receiving LINE coordinates array
+         * @param line - JSObject string with coords
+         */
+        public void addLine(Object line) {
+            currentLine = parseObject(line.toString());
             System.out.println(Arrays.deepToString(currentLine));
         }
 
-        public void addPolygon(Object object) {
-            currentPolygon = parseObject(object.toString());
+        /**
+         * Receiving POLYGON coordinates array
+         * @param polygon - JSObject string with coords
+         */
+        public void addPolygon(Object polygon) {
+            currentPolygon = parseObject(polygon.toString());
             System.out.println(Arrays.deepToString(currentPolygon));
         }
 
+        /**
+         * Console logging from WebView console to Java console
+         * @param text - log message
+         */
         public void log(String text) {
             System.out.println(text);
             log.setText(text);
         }
 
+        /**
+         * Parsing string JSObject to points coordinates array
+         * @param object - JSObject string with coords
+         * @return Array of double coordinates pairs
+         */
         private double[][] parseObject(String object) {
             String[] coordinatesArray = object.split(",");
             int numPoints = coordinatesArray.length / 2;
@@ -93,8 +113,8 @@ public class BuilderController {
             for (int i = 0; i < numPoints; i++) {
                 double x = Double.parseDouble(coordinatesArray[2 * i]);
                 double y = Double.parseDouble(coordinatesArray[2 * i + 1]);
-                points[i][0] = x;
-                points[i][1] = y;
+                points[i][0] = y;
+                points[i][1] = x;
             }
 
             return points;
@@ -104,5 +124,10 @@ public class BuilderController {
     @FXML
     private void onResetMapButton() {
         webView.getEngine().load(getClass().getResource("maps.html").toExternalForm());
+    }
+
+    @FXML
+    private void onConvertToJSON() {
+        converter.allToFeatureCollection(currentRoute, currentLine, currentPolygon, currentPoints, "output.json");
     }
 }
