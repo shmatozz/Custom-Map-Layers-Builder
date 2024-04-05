@@ -6,6 +6,7 @@ module com.example.custommaplayersbuilder {
     requires org.controlsfx.controls;
     requires org.kordamp.bootstrapfx.core;
     requires jdk.jsobject;
+    requires org.json;
 
     opens com.example.custommaplayersbuilder to javafx.fxml;
     exports com.example.custommaplayersbuilder;

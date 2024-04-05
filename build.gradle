@@ -38,6 +38,7 @@ dependencies {
   implementation('org.controlsfx:controlsfx:11.1.2')
   implementation('org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0')
   implementation('org.openjfx:javafx-web:16')
+  implementation("org.json:json:20240303")
 
   testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
