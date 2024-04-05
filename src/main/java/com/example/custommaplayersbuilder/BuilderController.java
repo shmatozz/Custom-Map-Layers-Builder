@@ -92,6 +92,15 @@ public class BuilderController {
         }
 
         /**
+         * Receiving POINTS coordinates array
+         * @param points - JSObject string with coords
+         */
+        public void addPoints(Object points) {
+            currentPoints = parseObject(points.toString());
+            System.out.println(Arrays.deepToString(currentPoints));
+        }
+
+        /**
          * Console logging from WebView console to Java console
          * @param text - log message
          */

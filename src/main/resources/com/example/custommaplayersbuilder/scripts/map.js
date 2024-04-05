@@ -50,6 +50,19 @@ function initMap() {
         });
     }, this);
 
+    searchControl.events.add('load', function() {
+        var geoResults = searchControl.getResultsArray();
+        var coordResults = [];
+        for (var i = 0; i < geoResults.length; i++) {
+            var resultCoordinates = geoResults[i].geometry.getCoordinates();
+            coordResults.push(resultCoordinates);
+        }
+
+        alert(window.javaCallback);
+        window.javaCallback.addPoints(coordResults);
+        window.javaCallback.log("Places results was placed");
+    });
+
     function onClickListenerHandler(event) {
         var coords = event.get('coords');
         points.push(coords);
