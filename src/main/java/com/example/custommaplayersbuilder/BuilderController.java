@@ -2,12 +2,18 @@ package com.example.custommaplayersbuilder;
 
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import netscape.javascript.JSObject;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -137,6 +143,26 @@ public class BuilderController {
 
     @FXML
     private void onConvertToJSON() {
-        converter.allToFeatureCollection(currentRoute, currentLine, currentPolygon, currentPoints, "output.json");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("dialog.fxml"));
+            Parent root = loader.load();
+
+            Scene scene = new Scene(root);
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Выберите что конвертировать");
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.setScene(scene);
+            dialogStage.setResizable(false);
+
+            DialogController dialogController = loader.getController();
+            dialogController.setConverter(converter);
+            dialogController.setWindow(scene.getWindow());
+            dialogController.initData(currentRoute, currentLine, currentPolygon, currentPoints);
+
+            dialogStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
