@@ -5,24 +5,60 @@
 <?import javafx.scene.layout.*?>
 
 <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="350.0" spacing="10.0" style="-fx-background-color: fafafa;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.custommaplayersbuilder.DialogController">
-    <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onAction="#selectSavePath" prefHeight="40.0" prefWidth="200.0" stylesheets="@styles/fxbuttons.css" text="Выбрать путь сохранения">
+    <Button fx:id="pathSelect"
+            maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
+            onAction="#selectSavePath"
+            prefHeight="40.0" prefWidth="200.0"
+            stylesheets="@styles/fxbuttons.css"
+            text="Выбрать путь сохранения">
       <VBox.margin>
          <Insets bottom="10.0" />
       </VBox.margin></Button>
-    <Button disable="true" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onAction="#convertAll" prefHeight="40.0" prefWidth="200.0" stylesheets="@styles/fxbuttons.css" text="Всё" />
-    <Button alignment="CENTER" contentDisplay="CENTER" disable="true" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onAction="#convertLine" prefHeight="35.0" prefWidth="180.0" stylesheets="@styles/fxbuttons.css" text="Только линию">
+    <Button fx:id="convertAllButton"
+            disable="true"
+            maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
+            onAction="#convertAll"
+            prefHeight="40.0" prefWidth="200.0"
+            stylesheets="@styles/fxbuttons.css"
+            text="Всё" />
+    <Button fx:id="convertLineButton"
+            alignment="CENTER" contentDisplay="CENTER"
+            disable="true"
+            maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
+            onAction="#convertLine"
+            prefHeight="35.0" prefWidth="180.0"
+            stylesheets="@styles/fxbuttons.css"
+            text="Только линию">
       <VBox.margin>
          <Insets left="10.0" right="10.0" />
       </VBox.margin></Button>
-    <Button disable="true" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onAction="#convertPolygon" prefHeight="35.0" prefWidth="180.0" stylesheets="@styles/fxbuttons.css" text="Только полигон">
+    <Button fx:id="convertPolygonButton"
+            disable="true"
+            maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
+            onAction="#convertPolygon"
+            prefHeight="35.0" prefWidth="180.0"
+            stylesheets="@styles/fxbuttons.css"
+            text="Только полигон">
       <VBox.margin>
          <Insets left="10.0" right="10.0" />
       </VBox.margin></Button>
-    <Button disable="true" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onAction="#convertPoints" prefHeight="35.0" prefWidth="180.0" stylesheets="@styles/fxbuttons.css" text="Только точки">
+    <Button fx:id="convertPointsButton"
+            disable="true"
+            maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
+            onAction="#convertPoints"
+            prefHeight="35.0" prefWidth="180.0"
+            stylesheets="@styles/fxbuttons.css"
+            text="Только точки">
       <VBox.margin>
          <Insets left="10.0" right="10.0" />
       </VBox.margin></Button>
-    <Button disable="true" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onAction="#convertRoute" prefHeight="35.0" prefWidth="180.0" stylesheets="@styles/fxbuttons.css" text="Только маршрут">
+    <Button fx:id="convertRouteButton"
+            disable="true"
+            maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
+            onAction="#convertRoute"
+            prefHeight="35.0" prefWidth="180.0"
+            stylesheets="@styles/fxbuttons.css"
+            text="Только маршрут">
       <VBox.margin>
          <Insets left="10.0" right="10.0" />
       </VBox.margin></Button>
