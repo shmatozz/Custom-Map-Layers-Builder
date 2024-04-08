@@ -2,9 +2,9 @@ package com.example.custommaplayersbuilder;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 import java.io.File;
 
@@ -23,8 +23,10 @@ public class DialogController {
     private Button convertPointsButton;
     @FXML
     private Button convertRouteButton;
+    @FXML
+    private Label logText;
 
-    private Window window;
+    private Stage stage;
     private double[][] currentRoute;
     private double[][] currentLine;
     private double[][] currentPolygon;
@@ -39,33 +41,58 @@ public class DialogController {
         this.currentPoints = currentPoints;
     }
 
-    public void setWindow(Window window) {
-        this.window = window;
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     @FXML
     private void convertAll() {
-        converter.allToFeatureCollection(currentRoute, currentLine, currentPolygon, currentPoints);
+        try {
+            converter.allToFeatureCollection(currentRoute, currentLine, currentPolygon, currentPoints);
+            logText.setText("Всё успешно записано");
+        } catch (Exception e) {
+            logText.setText("Упс, что-то пошло не так...");
+        }
     }
 
     @FXML
     private void convertLine() {
-        converter.convertLine(currentLine);
+        try {
+            converter.convertLine(currentLine);
+            logText.setText("Линия успешно записана");
+        } catch (Exception e) {
+            logText.setText("Упс, что-то пошло не так...");
+        }
     }
 
     @FXML
     private void convertPolygon() {
-        converter.convertPolygon(currentPolygon);
+        try {
+            converter.convertPolygon(currentPolygon);
+            logText.setText("Полигон успешно записан");
+        } catch (Exception e) {
+            logText.setText("Упс, что-то пошло не так...");
+        }
     }
 
     @FXML
     private void convertPoints() {
-        converter.convertPoints(currentPoints);
+        try {
+            converter.convertPoints(currentPoints);
+            logText.setText("Точки успешно записаны");
+        } catch (Exception e) {
+            logText.setText("Упс, что-то пошло не так...");
+        }
     }
 
     @FXML
     private void convertRoute() {
-        converter.convertRoute(currentRoute);
+        try {
+            converter.convertRoute(currentRoute);
+            logText.setText("Маршрут успешно записан");
+        } catch (Exception e) {
+            logText.setText("Упс, что-то пошло не так...");
+        }
     }
 
     @FXML
@@ -81,7 +108,6 @@ public class DialogController {
         fileChooser.getExtensionFilters().add(extFilter);
 
         /* Открываем диалог и получаем выбранный путь */
-        Stage stage = (Stage) window;
         File file = fileChooser.showSaveDialog(stage);
 
         if (file != null) {

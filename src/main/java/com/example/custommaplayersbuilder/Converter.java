@@ -18,7 +18,7 @@ public class Converter {
             double[][] line,
             double[][] polygon,
             double[][] points
-    ) {
+    ) throws IOException {
         JSONObject featureCollection = new JSONObject();
         featureCollection.put("type", "FeatureCollection");
 
@@ -34,7 +34,7 @@ public class Converter {
         writeToFile(featureCollection);
     }
 
-    public void convertLine(double[][] line) {
+    public void convertLine(double[][] line) throws IOException {
         /* Creating JSON object of LINE feature */
         JSONObject lineObject = createFeature("LineString", line);
 
@@ -42,7 +42,7 @@ public class Converter {
         writeToFile(lineObject);
     }
 
-    public void convertPolygon(double[][] polygon) {
+    public void convertPolygon(double[][] polygon) throws IOException {
         /* Creating JSON object of POLYGON feature */
         JSONObject polygonObject = createFeature("Polygon", polygon);
 
@@ -50,7 +50,7 @@ public class Converter {
         writeToFile(polygonObject);
     }
 
-    public void convertPoints(double[][] points) {
+    public void convertPoints(double[][] points) throws IOException {
         /* Creating JSON object of POINTS feature */
         JSONObject pointsObject = createFeature("MultiPoint", points);
 
@@ -58,7 +58,7 @@ public class Converter {
         writeToFile(pointsObject);
     }
 
-    public void convertRoute(double[][] route) {
+    public void convertRoute(double[][] route) throws IOException {
         /* Creating JSON object of ROUTE (LineString) feature */
         JSONObject routeObject = createFeature("LineString", route);
 
@@ -66,14 +66,10 @@ public class Converter {
         writeToFile(routeObject);
     }
 
-    private void writeToFile(JSONObject object) {
-        System.out.println(outputPath);
-        try (FileWriter file = new FileWriter(outputPath)) {
-            file.write(object.toString(2));
-            System.out.println("Successfully wrote GeoJSON to file: " + outputPath);
-        } catch (IOException e) {
-            System.err.println("Error writing GeoJSON to file: " + e.getMessage());
-        }
+    private void writeToFile(JSONObject object) throws IOException {
+        FileWriter file = new FileWriter(outputPath);
+        file.write(object.toString(2));
+        file.close();
     }
 
     /**
