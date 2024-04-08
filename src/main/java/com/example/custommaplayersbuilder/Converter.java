@@ -7,12 +7,17 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class Converter {
+    private final String outputPath;
+
+    Converter(String outputPath) {
+        this.outputPath = outputPath;
+    }
+
     public void allToFeatureCollection(
             double[][] route,
             double[][] line,
             double[][] polygon,
-            double[][] points,
-            String outputPath
+            double[][] points
     ) {
         JSONObject featureCollection = new JSONObject();
         featureCollection.put("type", "FeatureCollection");
@@ -26,8 +31,45 @@ public class Converter {
 
         featureCollection.put("features", features);
 
+        writeToFile(featureCollection);
+    }
+
+    public void convertLine(double[][] line) {
+        /* Creating JSON object of LINE feature */
+        JSONObject lineObject = createFeature("LineString", line);
+
+        /* Write created object to file */
+        writeToFile(lineObject);
+    }
+
+    public void convertPolygon(double[][] polygon) {
+        /* Creating JSON object of POLYGON feature */
+        JSONObject polygonObject = createFeature("Polygon", polygon);
+
+        /* Write created object to file */
+        writeToFile(polygonObject);
+    }
+
+    public void convertPoints(double[][] points) {
+        /* Creating JSON object of POINTS feature */
+        JSONObject pointsObject = createFeature("MultiPoint", points);
+
+        /* Write created object to file */
+        writeToFile(pointsObject);
+    }
+
+    public void convertRoute(double[][] route) {
+        /* Creating JSON object of ROUTE (LineString) feature */
+        JSONObject routeObject = createFeature("LineString", route);
+
+        /* Write created object to file */
+        writeToFile(routeObject);
+    }
+
+    private void writeToFile(JSONObject object) {
+        System.out.println(outputPath);
         try (FileWriter file = new FileWriter(outputPath)) {
-            file.write(featureCollection.toString(2));
+            file.write(object.toString(2));
             System.out.println("Successfully wrote GeoJSON to file: " + outputPath);
         } catch (IOException e) {
             System.err.println("Error writing GeoJSON to file: " + e.getMessage());
@@ -55,7 +97,9 @@ public class Converter {
         /* Creating properties (name, bounding box) */
         JSONObject properties = new JSONObject();
         properties.put("name", geometryType);
-        properties.put("bbox", getBoundingBox(coordinates));
+        if (coordinates.length > 0) {
+            properties.put("bbox", getBoundingBox(coordinates));
+        }
 
         /* Put all fields to feature */
         feature.put("type", "Feature");
