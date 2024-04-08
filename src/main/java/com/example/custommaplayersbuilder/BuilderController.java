@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -23,11 +22,6 @@ public class BuilderController {
     private WebView webView = new WebView();
 
     @FXML
-    private Button resetMapButton;
-    @FXML
-    private Button convertToJSON;
-
-    @FXML
     private Label log;
 
     private double[][] currentRoute = {};
@@ -36,7 +30,6 @@ public class BuilderController {
     private double[][] currentPoints = {};
 
     private final JavaCallback javaCallback = new JavaCallback();
-    private final Converter converter = new Converter();
 
     public void initialize() {
         WebEngine webEngine = webView.getEngine();
@@ -150,19 +143,18 @@ public class BuilderController {
             Scene scene = new Scene(root);
 
             Stage dialogStage = new Stage();
-            dialogStage.setTitle("Выберите что конвертировать");
+            dialogStage.setTitle("Настройки конвертации");
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             dialogStage.setScene(scene);
             dialogStage.setResizable(false);
 
             DialogController dialogController = loader.getController();
-            dialogController.setConverter(converter);
-            dialogController.setWindow(scene.getWindow());
+            dialogController.setStage(dialogStage);
             dialogController.initData(currentRoute, currentLine, currentPolygon, currentPoints);
 
             dialogStage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 }
