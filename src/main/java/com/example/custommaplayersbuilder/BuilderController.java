@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
@@ -147,6 +148,8 @@ public class BuilderController {
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             dialogStage.setScene(scene);
             dialogStage.setResizable(false);
+
+            dialogStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("icons/settings.png"))));
 
             DialogController dialogController = loader.getController();
             dialogController.setStage(dialogStage);

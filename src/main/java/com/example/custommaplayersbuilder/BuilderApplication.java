@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -13,20 +14,23 @@ public class BuilderApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        // Load the root node from the FXML file
+        /* Load the root node from the FXML file */
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("builder-view.fxml")));
 
-        // Create a scene
+        /* Create a scene */
         Scene scene = new Scene(root);
 
-        // Set the scene for primaryStage
+        /* Set the scene for primaryStage */
         primaryStage.setScene(scene);
 
-        // Set the window title
+        /* Set window title */
         primaryStage.setTitle("Custom Map Layers Builder");
         primaryStage.setMaximized(true);
 
-        // Show primaryStage
+        /* Load app icon */
+        primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("icons/main.png"))));
+
+        /* Show stage (open app) */
         primaryStage.show();
     }
 
