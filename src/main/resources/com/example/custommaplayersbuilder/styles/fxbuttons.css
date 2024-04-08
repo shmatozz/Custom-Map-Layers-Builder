@@ -1,14 +1,16 @@
-#Button {
+Button {
     -fx-border-radius: 4;
     -fx-border-width: 1;
     -fx-border-color: black;
     -fx-background-color: white;
+    -fx-font-family: Inter;
+    -fx-font-size: 14;
 }
 
-#Button:hover {
+Button:hover {
     -fx-background-color: rgb(240, 240, 240);
 }
 
-#Button:pressed {
+Button:pressed {
     -fx-background-color: rgb(220, 220, 220);
 }
