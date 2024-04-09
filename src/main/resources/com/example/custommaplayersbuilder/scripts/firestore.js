@@ -27,10 +27,10 @@ window.sendLine = function(coordinates, bounds, docName = "Line") {
         }
     }).then(() => {
         alert(window.javaCallback);
-        window.javaCallback.log(docName + " successfully written!");
+        window.javaCallback.log(docName + " успешно отправлен на сервер.");
     }).catch((error) => {
         alert(window.javaCallback);
-        window.javaCallback.log("Error writing document: ", error);
+        window.javaCallback.log("Упс, что-то пошло не так...");
     });
 }
 
@@ -47,10 +47,10 @@ window.sendPolygon = function(coordinates, bounds) {
         }
     }).then(() => {
         alert(window.javaCallback);
-        window.javaCallback.log("Polygon successfully written!");
+        window.javaCallback.log("Polygon успешно отправлен на сервер.");
     }).catch((error) => {
         alert(window.javaCallback);
-        window.javaCallback.log("Error writing document: ", error);
+        window.javaCallback.log("Упс, что-то пошло не так...");
     });
 }
 
@@ -67,9 +67,9 @@ window.sendPoints = function(coordinates, bounds, docName = "Points") {
         }
     }).then(() => {
         alert(window.javaCallback);
-        window.javaCallback.log("Points successfully written!");
+        window.javaCallback.log("Points успешно отправлены на сервер.");
     }).catch((error) => {
         alert(window.javaCallback);
-        window.javaCallback.log("Error writing document: ", error);
+        window.javaCallback.log("Упс, что-то пошло не так...");
     });
 }

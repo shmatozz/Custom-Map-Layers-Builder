@@ -40,7 +40,7 @@ public class BuilderController {
                 (observable, oldValue, newValue) -> {
                     if (newValue == Worker.State.SUCCEEDED) {
                         // Page loaded successfully
-                        javaCallback.log("Page loaded successfully!");
+                        javaCallback.log("Карта успешно загружена.");
 
                         JSObject window = (JSObject) webEngine.executeScript("window");
                         window.setMember("javaCallback", javaCallback);
@@ -105,7 +105,7 @@ public class BuilderController {
          * @param text - log message
          */
         public void log(String text) {
-            System.out.println(text);
+            // System.out.println(text);
             log.setText(text);
         }
 

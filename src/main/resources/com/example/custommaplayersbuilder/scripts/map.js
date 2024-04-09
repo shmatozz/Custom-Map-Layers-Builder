@@ -60,7 +60,7 @@ function initMap() {
 
         alert(window.javaCallback);
         window.javaCallback.addPoints(coordResults);
-        window.javaCallback.log("Places results was placed");
+        window.javaCallback.log("Результаты поиска мест добавлены на карту.");
     });
 
     function onClickListenerHandler(event) {
@@ -89,19 +89,10 @@ function initMap() {
 }
 
 function buildRoute() {
-    if (points.length < 2) {
-        console.error("Not enough points to build a route");
-        return;
-    }
-
     ymaps.route(points).then(function (route) {
         map.geoObjects.add(route);
-        var wayPoints = route.getWayPoints();
-        wayPoints.options.set('preset', 'islands#redStretchyIcon');
 
-        var way,
-            segments;
-
+        var way, segments;
         var allCoordinates = [];
 
         way = route.getPaths().get(0);
@@ -119,10 +110,10 @@ function buildRoute() {
 
         alert(window.javaCallback);
         window.javaCallback.addRoute(allCoordinates);
-        window.javaCallback.log("Route was built");
+        window.javaCallback.log("Маршрут построен.");
     }, function (error) {
         alert(window.javaCallback);
-        window.javaCallback.log("Error: " + error.message);
+        window.javaCallback.log("Упс, что-то пошло не так...");
     });
 }
 
@@ -138,7 +129,7 @@ function buildLine() {
 
     alert(window.javaCallback);
     window.javaCallback.addLine(points);
-    window.javaCallback.log("Line was built");
+    window.javaCallback.log("Линия построена.");
 }
 
 function buildPolygon() {
@@ -153,5 +144,5 @@ function buildPolygon() {
 
     alert(window.javaCallback);
     window.javaCallback.addPolygon(polygon.geometry.getCoordinates());
-    window.javaCallback.log("Polygon was built");
+    window.javaCallback.log("Полигон построен.");
 }
