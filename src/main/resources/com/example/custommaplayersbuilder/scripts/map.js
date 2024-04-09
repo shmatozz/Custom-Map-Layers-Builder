@@ -67,7 +67,17 @@ function initMap() {
         var coords = event.get('coords');
         points.push(coords);
 
-        var marker = new ymaps.Placemark(coords, {iconContent: String(points.length)});
+        var marker = new ymaps.Placemark(coords);
+
+        marker.events.add('click', function () {
+            var index = points.findIndex(function(point) {
+                return point[0] === coords[0] && point[1] === coords[1];
+            });
+            if (index !== -1) {
+                points.splice(index, 1);
+                map.geoObjects.remove(marker);
+            }
+        });
         map.geoObjects.add(marker);
 
         if (points.length >= 2) {
@@ -95,17 +105,33 @@ function buildRoute() {
         var way, segments;
         var allCoordinates = [];
 
-        way = route.getPaths().get(0);
-        segments = way.getSegments();
-        for (var j = 0; j < segments.length; j++) {
-            var segmentCoordinates = segments[j].getCoordinates();
-            allCoordinates = allCoordinates.concat(segmentCoordinates);
+        for (var i = 0; i < route.getPaths().getLength(); i++) {
+            way = route.getPaths().get(i);
+            segments = way.getSegments();
+            for (var j = 0; j < segments.length; j++) {
+                var segmentCoordinates = segments[j].getCoordinates();
+                allCoordinates = allCoordinates.concat(segmentCoordinates);
+            }
         }
+
+        var minLatitude = Infinity;
+        var minLongitude = Infinity;
+        var maxLatitude = -Infinity;
+        var maxLongitude = -Infinity;
+
+        for (let i = 0; i < allCoordinates.length; i++) {
+            minLatitude = Math.min(minLatitude, allCoordinates[i][0]);
+            minLongitude = Math.min(minLongitude, allCoordinates[i][1]);
+            maxLatitude = Math.max(maxLatitude, allCoordinates[i][0]);
+            maxLongitude = Math.max(maxLongitude, allCoordinates[i][1]);
+        }
+
+        var bounds = [[minLatitude, minLongitude], [maxLatitude, maxLongitude]];
 
         const sendRouteButton =  document.getElementById('sendRouteButton')
         sendRouteButton.style.display = 'block';
         sendRouteButton.addEventListener('click', function () {
-            window.sendLine(allCoordinates, way.geometry.getBounds(), "Route");
+            window.sendLine(allCoordinates, bounds, "Route");
         });
 
         alert(window.javaCallback);

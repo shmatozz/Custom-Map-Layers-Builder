@@ -14,7 +14,6 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 window.sendLine = function(coordinates, bounds, docName = "Line") {
-    console.log([bounds[0][0], bounds[0][1], bounds[1][0], bounds[1][1]])
     db.collection("geofiles").doc(docName).set({
         type: "Feature",
         geometry: {
