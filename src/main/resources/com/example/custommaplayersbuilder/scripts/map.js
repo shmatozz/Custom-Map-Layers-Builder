@@ -142,7 +142,7 @@ function buildLine() {
 }
 
 function buildPolygon() {
-    polygon.geometry.setCoordinates([points]);
+    polygon.geometry.setCoordinates([points.concat([points[0]])]);
     map.geoObjects.add(polygon);
 
     const sendPolygonButton =  document.getElementById('sendPolygonButton')
@@ -152,6 +152,6 @@ function buildPolygon() {
     });
 
     alert(window.javaCallback);
-    window.javaCallback.addPolygon(points);
+    window.javaCallback.addPolygon(polygon.geometry.getCoordinates());
     window.javaCallback.log("Polygon was built");
 }

@@ -19,18 +19,29 @@ public class Converter {
             double[][] polygon,
             double[][] points
     ) throws IOException {
+        /* Creating feature collection */
         JSONObject featureCollection = new JSONObject();
-        featureCollection.put("type", "FeatureCollection");
-
         JSONArray features = new JSONArray();
 
-        features.put(createFeature("MultiPoint", points));
-        features.put(createFeature("LineString", line));
-        features.put(createFeature("Polygon", polygon));
-        features.put(createFeature("LineString", route));
+        /* Add existing features to collections */
+        if (points.length > 0) {
+            features.put(createFeature("MultiPoint", points));
+        }
+        if (line.length > 0) {
+            features.put(createFeature("LineString", line));
+        }
+        if (polygon.length > 0) {
+            features.put(createFeature("Polygon", polygon));
+        }
+        if (route.length > 0) {
+            features.put(createFeature("LineString", route));
+        }
 
+        /* Put created fields to JSON Object */
+        featureCollection.put("type", "FeatureCollection");
         featureCollection.put("features", features);
 
+        /* Write created object to file */
         writeToFile(featureCollection);
     }
 
