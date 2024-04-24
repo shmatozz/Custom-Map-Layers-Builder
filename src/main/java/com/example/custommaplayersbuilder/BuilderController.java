@@ -133,6 +133,10 @@ public class BuilderController {
     @FXML
     private void onResetMapButton() {
         webView.getEngine().load(getClass().getResource("maps.html").toExternalForm());
+        currentRoute = new double[][] {};
+        currentLine = new double[][] {};
+        currentPolygon = new double[][] {};
+        currentPoints = new double[][] {};
     }
 
     @FXML
