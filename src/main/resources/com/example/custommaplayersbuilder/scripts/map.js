@@ -4,10 +4,9 @@ const points = [];
 let map;
 let line;
 let polygon;
-let route;
 
 function initMap() {
-    var searchControl = new ymaps.control.SearchControl({
+    searchControl = new ymaps.control.SearchControl({
         options: {
             provider: 'yandex#search',
             noPopup: true,
@@ -50,6 +49,12 @@ function initMap() {
         });
     }, this);
 
+    searchControl.events.add('clear', function () {
+        const searchPointsButton =  document.getElementById('getSearchPointsButton')
+
+        searchPointsButton.style.display = 'none';
+    }, this);
+
     searchControl.events.add('load', function() {
         var geoResults = searchControl.getResultsArray();
         var coordResults = [];
@@ -76,11 +81,24 @@ function initMap() {
             if (index !== -1) {
                 points.splice(index, 1);
                 map.geoObjects.remove(marker);
+
+                if (points.length < 2) {
+                    const buildRouteButton =  document.getElementById('routeButton')
+                    const buildLineButton =  document.getElementById('lineButton')
+
+                    buildRouteButton.style.display = 'none';
+                    buildLineButton.style.display = 'none';
+                }
+                if (points.length < 3) {
+                    const buildPolygonButton =  document.getElementById('polygonButton')
+
+                    buildPolygonButton.style.display = 'none';
+                }
             }
         });
         map.geoObjects.add(marker);
 
-        if (points.length >= 2) {
+        if (points.length === 2) {
             const buildRouteButton =  document.getElementById('routeButton')
             const buildLineButton =  document.getElementById('lineButton')
 
@@ -90,7 +108,7 @@ function initMap() {
             buildLineButton.addEventListener('click', buildLine);
         }
         if (points.length > 2) {
-            const buildPolygonButton =  document.getElementById('polygonButton')
+            const buildPolygonButton = document.getElementById('polygonButton')
 
             buildPolygonButton.style.display = 'block';
             buildPolygonButton.addEventListener('click', buildPolygon);
@@ -137,7 +155,7 @@ function buildRoute() {
         alert(window.javaCallback);
         window.javaCallback.addRoute(allCoordinates);
         window.javaCallback.log("Маршрут построен.");
-    }, function (error) {
+    }, function () {
         alert(window.javaCallback);
         window.javaCallback.log("Упс, что-то пошло не так...");
     });
