@@ -77,6 +77,7 @@ function initMap() {
     }
 }
 
+var pointIndex;
 function processCustomPoint(jsonData) {
     var data = JSON.parse(jsonData);
 
@@ -89,7 +90,18 @@ function processCustomPoint(jsonData) {
         balloonContentHeader: data['header'],
         balloonContentBody: data['body']
     }, {
-        iconColor: '#' + data['color'].substring(2)
+        iconColor: '#' + data['color'].substring(2),
+        draggable: true
+    });
+
+    marker.events.add('dragstart', function (event) {
+        pointIndex = points.findIndex(function(point) {
+            return point[0] === coords[0] && point[1] === coords[1];
+        });
+    });
+
+    marker.events.add('dragend', function (event) {
+        points[pointIndex] = marker.geometry.getCoordinates();
     });
 
     map.geoObjects.add(marker);
