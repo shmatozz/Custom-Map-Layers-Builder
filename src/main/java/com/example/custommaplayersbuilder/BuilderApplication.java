@@ -15,7 +15,7 @@ public class BuilderApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         /* Load the root node from the FXML file */
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("builder-view.fxml")));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("fxml/builder-view.fxml")));
 
         /* Create a scene */
         Scene scene = new Scene(root);
