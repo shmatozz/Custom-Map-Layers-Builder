@@ -72,47 +72,42 @@ function initMap() {
         var coords = event.get('coords');
         points.push(coords);
 
-        var marker = new ymaps.Placemark(coords);
+        alert(window.javaCallback);
+        window.javaCallback.openPointCreateDialog(coords);
+    }
+}
 
-        marker.events.add('click', function () {
-            var index = points.findIndex(function(point) {
-                return point[0] === coords[0] && point[1] === coords[1];
-            });
-            if (index !== -1) {
-                points.splice(index, 1);
-                map.geoObjects.remove(marker);
+function processCustomPoint(jsonData) {
+    var data = JSON.parse(jsonData);
 
-                if (points.length < 2) {
-                    const buildRouteButton =  document.getElementById('routeButton')
-                    const buildLineButton =  document.getElementById('lineButton')
+    alert(window.javaCallback);
+    var coords = data['coords'].toString().split(',').map(parseFloat);
+    [coords[0], coords[1]] = [coords[1], coords[0]];
 
-                    buildRouteButton.style.display = 'none';
-                    buildLineButton.style.display = 'none';
-                }
-                if (points.length < 3) {
-                    const buildPolygonButton =  document.getElementById('polygonButton')
+    var marker = new ymaps.Placemark(coords, {
+        hintContent: data['hint'],
+        balloonContentHeader: data['header'],
+        balloonContentBody: data['body']
+    }, {
+        iconColor: '#' + data['color'].substring(2)
+    });
 
-                    buildPolygonButton.style.display = 'none';
-                }
-            }
-        });
-        map.geoObjects.add(marker);
+    map.geoObjects.add(marker);
 
-        if (points.length === 2) {
-            const buildRouteButton =  document.getElementById('routeButton')
-            const buildLineButton =  document.getElementById('lineButton')
+    if (points.length === 2) {
+        const buildRouteButton =  document.getElementById('routeButton')
+        const buildLineButton =  document.getElementById('lineButton')
 
-            buildRouteButton.style.display = 'block';
-            buildRouteButton.addEventListener('click', buildRoute);
-            buildLineButton.style.display = 'block';
-            buildLineButton.addEventListener('click', buildLine);
-        }
-        if (points.length > 2) {
-            const buildPolygonButton = document.getElementById('polygonButton')
+        buildRouteButton.style.display = 'block';
+        buildRouteButton.addEventListener('click', buildRoute);
+        buildLineButton.style.display = 'block';
+        buildLineButton.addEventListener('click', buildLine);
+    }
+    if (points.length > 2) {
+        const buildPolygonButton = document.getElementById('polygonButton')
 
-            buildPolygonButton.style.display = 'block';
-            buildPolygonButton.addEventListener('click', buildPolygon);
-        }
+        buildPolygonButton.style.display = 'block';
+        buildPolygonButton.addEventListener('click', buildPolygon);
     }
 }
 

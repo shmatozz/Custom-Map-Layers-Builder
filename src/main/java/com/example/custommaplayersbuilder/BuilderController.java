@@ -12,6 +12,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -101,6 +102,15 @@ public class BuilderController {
         }
 
         /**
+         * Open dialog window to set up custom
+         * @param points - JSObject string with coords
+         */
+        public void openPointCreateDialog(Object points) {
+            System.out.println();
+            onCreatePlacemark(parseObject(points.toString())[0]);
+        }
+
+        /**
          * Console logging from WebView console to Java console
          * @param text - log message
          */
@@ -140,9 +150,48 @@ public class BuilderController {
     }
 
     @FXML
+    private void onCreatePlacemark(double[] points) {
+        try {
+            /* Setup dialog window */
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/setup-placemark-dialog.fxml"));
+            Parent root = loader.load();
+
+            Scene scene = new Scene(root);
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Настройки новой точки");
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.setScene(scene);
+            dialogStage.setResizable(false);
+
+            dialogStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("icons/settings.png"))));
+
+            /* Setup dialog controller */
+            SetupPlacemarkController dialogController = loader.getController();
+            dialogController.setStage(dialogStage);
+            dialogController.setPoints(points);
+            dialogController.setWebView(webView);
+
+            dialogStage.showAndWait();
+
+            /* Get new custom point data */
+            JSONObject data = dialogController.getEnteredData();
+
+            System.out.println(data.toString());
+
+            /* Pass new custom point data to WebView */
+            if (!data.isEmpty()) {
+                webView.getEngine().executeScript("processCustomPoint('" + data + "')");
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @FXML
     private void onConvertToJSON() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("dialog.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/create-layer-dialog.fxml"));
             Parent root = loader.load();
 
             Scene scene = new Scene(root);
