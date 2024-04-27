@@ -5,8 +5,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import netscape.javascript.JSObject;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -55,7 +53,7 @@ public class DialogController {
     @FXML
     private void convertAll() {
         try {
-            converter.allToFeatureCollection(currentRoute, currentLine, currentPolygon, currentPoints);
+            converter.allToFeatureCollection(currentRoute, currentLine, currentPolygon, currentPoints, currentCustomPoints);
             logText.setText("Всё успешно записано");
         } catch (Exception e) {
             logText.setText("Упс, что-то пошло не так...");

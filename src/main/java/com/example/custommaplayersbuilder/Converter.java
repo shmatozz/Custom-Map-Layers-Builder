@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Converter {
@@ -17,15 +18,16 @@ public class Converter {
             double[][] route,
             double[][] line,
             double[][] polygon,
-            double[][] points
+            ArrayList<JSONObject> points,
+            ArrayList<JSONObject> customPoints
     ) throws IOException {
         /* Creating feature collection */
         JSONObject featureCollection = new JSONObject();
         JSONArray features = new JSONArray();
 
         /* Add existing features to collections */
-        if (points.length > 0) {
-            features.put(createFeature("MultiPoint", points));
+        if (!points.isEmpty() || !customPoints.isEmpty()) {
+            features.put(createPointsFeature(points, customPoints));
         }
         if (line.length > 0) {
             features.put(createFeature("LineString", line));
@@ -61,9 +63,9 @@ public class Converter {
         writeToFile(polygonObject);
     }
 
-    public void convertPoints(double[][] points) throws IOException {
+    public void convertPoints(ArrayList<JSONObject> points, ArrayList<JSONObject> customPoints) throws IOException {
         /* Creating JSON object of POINTS feature */
-        JSONObject pointsObject = createFeature("MultiPoint", points);
+        JSONObject pointsObject = createPointsFeature(points, customPoints);
 
         /* Write created object to file */
         writeToFile(pointsObject);
@@ -90,13 +92,15 @@ public class Converter {
      * @return JSONObject of built feature
      */
     private JSONObject createFeature(String geometryType, double[][] coordinates) {
-         JSONObject feature = new JSONObject();
+        JSONObject feature = new JSONObject();
 
         /* Creating geometry */
         JSONObject geometry = new JSONObject();
         geometry.put("type", geometryType);
         if (Objects.equals(geometryType, "Polygon")) {
-            geometry.put("coordinates", new double[][][] { coordinates } );
+            geometry.put("coordinates", new double[][][]{coordinates});
+        } else if (Objects.equals(geometryType, "Point")) {
+            geometry.put("coordinates", coordinates[0]);
         } else {
             geometry.put("coordinates", coordinates);
         }
@@ -112,6 +116,50 @@ public class Converter {
         feature.put("type", "Feature");
         feature.put("geometry", geometry);
         feature.put("properties", properties);
+
+        return feature;
+    }
+
+    /**
+     * Create GeoJSON points feature by arrays of Objects with properties
+     * @param points array of places search results
+     * @param customPoints array of custom points
+     * @return JSONObject of built feature
+     */
+    private JSONObject createPointsFeature(ArrayList<JSONObject> points, ArrayList<JSONObject> customPoints) {
+        JSONObject feature = new JSONObject();
+        ArrayList<JSONObject> features = new ArrayList<>();
+
+        feature.put("type", "FeatureCollection");
+
+        if (!customPoints.isEmpty()) {
+            for (JSONObject point : customPoints) {
+                JSONObject pointFeature = createFeature("Point", new double[][]{ (double[]) point.get("coords") });
+
+                pointFeature.getJSONObject("properties").put("header", point.get("header"));
+                pointFeature.getJSONObject("properties").put("body", point.get("body"));
+                pointFeature.getJSONObject("properties").put("hint", point.get("hint"));
+                pointFeature.getJSONObject("properties").put("color", point.get("color"));
+
+                features.add(pointFeature);
+            }
+        }
+
+        if (!points.isEmpty()) {
+            for (JSONObject point : points) {
+                double[] pointCoords = new double[2];
+                pointCoords[0] = point.getJSONArray("coords").getDouble(0);
+                pointCoords[1] = point.getJSONArray("coords").getDouble(1);
+                JSONObject pointFeature = createFeature("Point", new double[][] { pointCoords });
+
+                pointFeature.getJSONObject("properties").put("header", point.get("header"));
+
+                features.add(pointFeature);
+            }
+        }
+
+        feature.put("type", "FeatureCollection");
+        feature.put("features", features);
 
         return feature;
     }
