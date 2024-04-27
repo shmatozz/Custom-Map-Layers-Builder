@@ -5,8 +5,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import netscape.javascript.JSObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class DialogController {
     private Converter converter;
@@ -30,15 +34,18 @@ public class DialogController {
     private double[][] currentRoute;
     private double[][] currentLine;
     private double[][] currentPolygon;
-    private double[][] currentPoints;
+    private ArrayList<JSONObject> currentPoints;
+    private ArrayList<JSONObject> currentCustomPoints;
 
 
     public void initData(double[][] currentRoute, double[][] currentLine,
-                         double[][] currentPolygon, double[][] currentPoints) {
+                         double[][] currentPolygon,  ArrayList<JSONObject> currentPoints,
+                         ArrayList<JSONObject> currentCustomPoints) {
         this.currentRoute = currentRoute;
         this.currentLine = currentLine;
         this.currentPolygon = currentPolygon;
         this.currentPoints = currentPoints;
+        this.currentCustomPoints = currentCustomPoints;
     }
 
     public void setStage(Stage stage) {
@@ -78,9 +85,10 @@ public class DialogController {
     @FXML
     private void convertPoints() {
         try {
-            converter.convertPoints(currentPoints);
+            converter.convertPoints(currentPoints, currentCustomPoints);
             logText.setText("Точки успешно записаны");
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             logText.setText("Упс, что-то пошло не так...");
         }
     }
@@ -123,7 +131,7 @@ public class DialogController {
             if (currentPolygon.length > 0) {
                 convertPolygonButton.setDisable(false); any = true;
             }
-            if (currentPoints.length > 0) {
+            if (!currentPoints.isEmpty() || !currentCustomPoints.isEmpty()) {
                 convertPointsButton.setDisable(false); any = true;
             }
             if (currentRoute.length > 0) {
