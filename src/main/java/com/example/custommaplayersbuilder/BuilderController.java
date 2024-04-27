@@ -15,7 +15,9 @@ import netscape.javascript.JSObject;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Objects;
 
 public class BuilderController {
@@ -29,7 +31,8 @@ public class BuilderController {
     private double[][] currentRoute = {};
     private double[][] currentLine = {};
     private double[][] currentPolygon = {};
-    private double[][] currentPoints = {};
+    private ArrayList<JSONObject> currentPoints = new ArrayList<>();
+    private ArrayList<JSONObject> currentCustomPoints = new ArrayList<>();
 
     private final JavaCallback javaCallback = new JavaCallback();
 
@@ -96,9 +99,12 @@ public class BuilderController {
          * Receiving POINTS coordinates array
          * @param points - JSObject string with coords
          */
-        public void addPoints(Object points) {
-            currentPoints = parseObject(points.toString());
-            System.out.println(Arrays.deepToString(currentPoints));
+        public void addPoints(Object points, String pointsName) {
+            double[][] parsedPointsCoords = parseObject(points.toString());
+            currentPoints.clear();
+            for (double[] parsedPointsCoord : parsedPointsCoords) {
+                currentPoints.add(new JSONObject(Map.of("coords", parsedPointsCoord, "header", pointsName)));
+            }
         }
 
         /**
@@ -146,7 +152,8 @@ public class BuilderController {
         currentRoute = new double[][] {};
         currentLine = new double[][] {};
         currentPolygon = new double[][] {};
-        currentPoints = new double[][] {};
+        currentPoints.clear();
+        currentCustomPoints.clear();
     }
 
     @FXML
@@ -176,6 +183,7 @@ public class BuilderController {
 
             /* Get new custom point data */
             JSONObject data = dialogController.getEnteredData();
+            currentCustomPoints.add(data);
 
             System.out.println(data.toString());
 
@@ -206,7 +214,7 @@ public class BuilderController {
 
             DialogController dialogController = loader.getController();
             dialogController.setStage(dialogStage);
-            dialogController.initData(currentRoute, currentLine, currentPolygon, currentPoints);
+            dialogController.initData(currentRoute, currentLine, currentPolygon, currentPoints, currentCustomPoints);
 
             dialogStage.show();
         } catch (IOException e) {

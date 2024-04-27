@@ -64,7 +64,7 @@ function initMap() {
         }
 
         alert(window.javaCallback);
-        window.javaCallback.addPoints(coordResults);
+        window.javaCallback.addPoints(coordResults, searchControl.getRequestString());
         window.javaCallback.log("Результаты поиска мест добавлены на карту.");
     });
 
