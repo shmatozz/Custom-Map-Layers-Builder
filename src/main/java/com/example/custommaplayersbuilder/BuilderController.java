@@ -31,8 +31,8 @@ public class BuilderController {
     private double[][] currentRoute = {};
     private double[][] currentLine = {};
     private double[][] currentPolygon = {};
-    private ArrayList<JSONObject> currentPoints = new ArrayList<>();
-    private ArrayList<JSONObject> currentCustomPoints = new ArrayList<>();
+    private final ArrayList<JSONObject> currentPoints = new ArrayList<>();
+    private final ArrayList<JSONObject> currentCustomPoints = new ArrayList<>();
 
     private final JavaCallback javaCallback = new JavaCallback();
 
@@ -213,6 +213,7 @@ public class BuilderController {
 
             DialogController dialogController = loader.getController();
             dialogController.setStage(dialogStage);
+            dialogController.setWebView(webView);
             dialogController.initData(currentRoute, currentLine, currentPolygon, currentPoints, currentCustomPoints);
 
             dialogStage.show();

@@ -198,9 +198,7 @@ function buildLine() {
 
     const sendLineButton =  document.getElementById('sendLineButton')
     sendLineButton.style.display = 'block';
-    sendLineButton.addEventListener('click', function () {
-        window.sendLine(line.geometry.getCoordinates(), line.geometry.getBounds());
-    });
+    sendLineButton.addEventListener('click', sendLineToServer);
 
     alert(window.javaCallback);
     window.javaCallback.addLine(points);
@@ -213,11 +211,21 @@ function buildPolygon() {
 
     const sendPolygonButton =  document.getElementById('sendPolygonButton')
     sendPolygonButton.style.display = 'block';
-    sendPolygonButton.addEventListener('click', function () {
-        window.sendPolygon(polygon.geometry.getCoordinates(), polygon.geometry.getBounds())
-    });
+    sendPolygonButton.addEventListener('click', sendPolygonToServer);
 
     alert(window.javaCallback);
     window.javaCallback.addPolygon(polygon.geometry.getCoordinates());
     window.javaCallback.log("Полигон построен.");
+}
+
+function sendLineToServer() {
+    window.sendLine(line.geometry.getCoordinates(), line.geometry.getBounds());
+}
+
+function sendPolygonToServer() {
+    window.sendPolygon(polygon.geometry.getCoordinates(), polygon.geometry.getBounds());
+}
+
+function sendPointsToServer() {
+    window.sendPoints(customPoints, searchPoints, map.getBounds());
 }

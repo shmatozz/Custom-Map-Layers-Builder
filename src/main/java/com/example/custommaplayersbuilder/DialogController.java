@@ -3,6 +3,7 @@ package com.example.custommaplayersbuilder;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.json.JSONObject;
@@ -29,6 +30,7 @@ public class DialogController {
     private Label logText;
 
     private Stage stage;
+    private WebView webView;
     private double[][] currentRoute;
     private double[][] currentLine;
     private double[][] currentPolygon;
@@ -50,6 +52,10 @@ public class DialogController {
         this.stage = stage;
     }
 
+    public void setWebView(WebView webView) {
+        this.webView = webView;
+    }
+
     @FXML
     private void convertAll() {
         try {
@@ -65,6 +71,8 @@ public class DialogController {
         try {
             converter.convertLine(currentLine);
             logText.setText("Линия успешно записана");
+
+            webView.getEngine().executeScript("sendLineToServer()");
         } catch (Exception e) {
             logText.setText("Упс, что-то пошло не так...");
         }
@@ -75,6 +83,8 @@ public class DialogController {
         try {
             converter.convertPolygon(currentPolygon);
             logText.setText("Полигон успешно записан");
+
+            webView.getEngine().executeScript("sendPolygonToServer()");
         } catch (Exception e) {
             logText.setText("Упс, что-то пошло не так...");
         }
@@ -85,6 +95,8 @@ public class DialogController {
         try {
             converter.convertPoints(currentPoints, currentCustomPoints);
             logText.setText("Точки успешно записаны");
+
+            webView.getEngine().executeScript("sendPointsToServer()");
         } catch (Exception e) {
             System.out.println(e.getMessage());
             logText.setText("Упс, что-то пошло не так...");
