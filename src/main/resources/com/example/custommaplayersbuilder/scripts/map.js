@@ -6,6 +6,7 @@ let searchPoints = [];
 let map;
 let line;
 let polygon;
+let route = { coordinates: [], bounds: [] };
 
 function initMap() {
     searchControl = new ymaps.control.SearchControl({
@@ -126,9 +127,7 @@ function processCustomPoint(jsonData) {
         const searchPointsButton =  document.getElementById('getSearchPointsButton')
 
         searchPointsButton.style.display = 'block';
-        searchPointsButton.addEventListener('click', function () {
-            window.sendPoints(customPoints, searchPoints, map.getBounds());
-        });
+        searchPointsButton.addEventListener('click', sendPointsToServer);
     }
     if (points.length === 2) {
         const buildRouteButton =  document.getElementById('routeButton')
@@ -148,14 +147,14 @@ function processCustomPoint(jsonData) {
 }
 
 function buildRoute() {
-    ymaps.route(points).then(function (route) {
-        map.geoObjects.add(route);
+    ymaps.route(points).then(function (r) {
+        map.geoObjects.add(r);
 
-        var way, segments;
-        var allCoordinates = [];
+        let way, segments;
+        let allCoordinates = [];
 
-        for (var i = 0; i < route.getPaths().getLength(); i++) {
-            way = route.getPaths().get(i);
+        for (var i = 0; i < r.getPaths().getLength(); i++) {
+            way = r.getPaths().get(i);
             segments = way.getSegments();
             for (var j = 0; j < segments.length; j++) {
                 var segmentCoordinates = segments[j].getCoordinates();
@@ -175,13 +174,12 @@ function buildRoute() {
             maxLongitude = Math.max(maxLongitude, allCoordinates[i][1]);
         }
 
-        var bounds = [[minLatitude, minLongitude], [maxLatitude, maxLongitude]];
+        route.coordinates = allCoordinates
+        route.bounds = [[minLatitude, minLongitude], [maxLatitude, maxLongitude]];
 
         const sendRouteButton =  document.getElementById('sendRouteButton')
         sendRouteButton.style.display = 'block';
-        sendRouteButton.addEventListener('click', function () {
-            window.sendLine(allCoordinates, bounds, "Route");
-        });
+        sendRouteButton.addEventListener('click', sendRouteToServer);
 
         alert(window.javaCallback);
         window.javaCallback.addRoute(allCoordinates);
@@ -226,6 +224,14 @@ function sendPolygonToServer() {
     window.sendPolygon(polygon.geometry.getCoordinates(), polygon.geometry.getBounds());
 }
 
+function sendRouteToServer() {
+    window.sendLine(route.coordinates, route.bounds, "Route");
+}
+
 function sendPointsToServer() {
     window.sendPoints(customPoints, searchPoints, map.getBounds());
+}
+
+function sendAllToServer(docName) {
+    window.sendAll(customPoints, searchPoints, line, polygon, route, docName)
 }

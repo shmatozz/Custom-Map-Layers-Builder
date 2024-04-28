@@ -61,7 +61,13 @@ public class DialogController {
         try {
             converter.allToFeatureCollection(currentRoute, currentLine, currentPolygon, currentPoints, currentCustomPoints);
             logText.setText("Всё успешно записано");
+
+            File file = new File(pathSelect.getText());
+            String fileNameWithoutExtension = file.getName().replaceFirst("[.][^.]+$", "");
+
+            webView.getEngine().executeScript("sendAllToServer('" + fileNameWithoutExtension + "')");
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             logText.setText("Упс, что-то пошло не так...");
         }
     }
@@ -108,6 +114,8 @@ public class DialogController {
         try {
             converter.convertRoute(currentRoute);
             logText.setText("Маршрут успешно записан");
+
+            webView.getEngine().executeScript("sendRouteToServer()");
         } catch (Exception e) {
             logText.setText("Упс, что-то пошло не так...");
         }
