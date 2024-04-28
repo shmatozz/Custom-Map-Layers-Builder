@@ -1,6 +1,8 @@
 ymaps.ready(initMap);
 
 const points = [];
+const customPoints = [];
+let searchPoints = [];
 let map;
 let line;
 let polygon;
@@ -33,22 +35,6 @@ function initMap() {
 
     map.events.add('click', onClickListenerHandler);
 
-    searchControl.events.add('submit', function () {
-        const searchPointsButton =  document.getElementById('getSearchPointsButton')
-
-        searchPointsButton.style.display = 'block';
-        searchPointsButton.addEventListener('click', function () {
-            var geoResults = searchControl.getResultsArray();
-            var coordResults = [];
-            for (var i = 0; i < geoResults.length; i++) {
-                var resultCoordinates = geoResults[i].geometry.getCoordinates();
-                coordResults.push(resultCoordinates);
-            }
-
-            window.sendPoints(coordResults, map.getBounds(), searchControl.getRequestString());
-        });
-    }, this);
-
     searchControl.events.add('clear', function () {
         const searchPointsButton =  document.getElementById('getSearchPointsButton')
 
@@ -56,15 +42,33 @@ function initMap() {
     }, this);
 
     searchControl.events.add('load', function() {
+        searchPoints = [];
         var geoResults = searchControl.getResultsArray();
+        const request = searchControl.getRequestString();
         var coordResults = [];
+
         for (var i = 0; i < geoResults.length; i++) {
             var resultCoordinates = geoResults[i].geometry.getCoordinates();
             coordResults.push(resultCoordinates);
+
+            searchPoints.push({
+                coords: resultCoordinates,
+                hint: request,
+                header: request,
+                body: "",
+                color: ""
+            });
         }
 
+        const searchPointsButton =  document.getElementById('getSearchPointsButton');
+
+        searchPointsButton.style.display = 'block';
+        searchPointsButton.addEventListener('click', function () {
+            window.sendPoints(customPoints, searchPoints, map.getBounds(), searchControl.getRequestString());
+        });
+
         alert(window.javaCallback);
-        window.javaCallback.addPoints(coordResults, searchControl.getRequestString());
+        window.javaCallback.addPoints(coordResults, request);
         window.javaCallback.log("Результаты поиска мест добавлены на карту.");
     });
 
@@ -94,18 +98,38 @@ function processCustomPoint(jsonData) {
         draggable: true
     });
 
-    marker.events.add('dragstart', function (event) {
+    marker.events.add('dragstart', function () {
         pointIndex = points.findIndex(function(point) {
             return point[0] === coords[0] && point[1] === coords[1];
         });
+        pointIndex = customPoints.findIndex(function(point) {
+            return point.coords[0] === coords[0] && point.coords[1] === coords[1];
+        });
     });
 
-    marker.events.add('dragend', function (event) {
+    marker.events.add('dragend', function () {
         points[pointIndex] = marker.geometry.getCoordinates();
+        customPoints[pointIndex].coords = marker.geometry.getCoordinates();
     });
 
     map.geoObjects.add(marker);
 
+    customPoints.push({
+        coords: coords,
+        hint: data['hint'],
+        header: data['header'],
+        body: data['body'],
+        color: data['color']
+    });
+
+    if (points.length < 2) {
+        const searchPointsButton =  document.getElementById('getSearchPointsButton')
+
+        searchPointsButton.style.display = 'block';
+        searchPointsButton.addEventListener('click', function () {
+            window.sendPoints(customPoints, searchPoints, map.getBounds());
+        });
+    }
     if (points.length === 2) {
         const buildRouteButton =  document.getElementById('routeButton')
         const buildLineButton =  document.getElementById('lineButton')

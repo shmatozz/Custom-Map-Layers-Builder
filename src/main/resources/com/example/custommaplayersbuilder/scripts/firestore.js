@@ -27,7 +27,7 @@ window.sendLine = function(coordinates, bounds, docName = "Line") {
     }).then(() => {
         alert(window.javaCallback);
         window.javaCallback.log(docName + " успешно отправлен на сервер.");
-    }).catch((error) => {
+    }).catch(() => {
         alert(window.javaCallback);
         window.javaCallback.log("Упс, что-то пошло не так...");
     });
@@ -47,28 +47,42 @@ window.sendPolygon = function(coordinates, bounds) {
     }).then(() => {
         alert(window.javaCallback);
         window.javaCallback.log("Polygon успешно отправлен на сервер.");
-    }).catch((error) => {
+    }).catch(() => {
         alert(window.javaCallback);
         window.javaCallback.log("Упс, что-то пошло не так...");
     });
 }
 
-window.sendPoints = function(coordinates, bounds, docName = "Points") {
-    db.collection("geofiles").doc(docName).set({
-        type: "Feature",
-        geometry: {
-            type: "MultiPoint",
-            coordinates: coordinates.toString()
-        },
-        properties: {
-            name: docName,
-            bbox: [bounds[0][1], bounds[0][0], bounds[1][1], bounds[1][0]]
-        }
-    }).then(() => {
-        alert(window.javaCallback);
-        window.javaCallback.log("Points успешно отправлены на сервер.");
-    }).catch((error) => {
-        alert(window.javaCallback);
-        window.javaCallback.log("Упс, что-то пошло не так...");
+window.sendPoints = function(customPoints, searchPoints, bounds, docName = "Points") {
+    const allPoints = customPoints.concat(searchPoints);
+
+    const features = allPoints.map(function (point) {
+        return {
+            type: "Feature",
+            geometry: {
+                type: "Point",
+                coordinates: point.coords
+            },
+            properties: {
+                hint: point.hint,
+                header: point.header,
+                body: point.body,
+                color: point.color
+            }
+        };
+    });
+
+    const featureCollection = {
+        type: "FeatureCollection",
+        features: features
+    };
+
+    db.collection("geofiles").doc(docName).set(featureCollection)
+        .then(() => {
+            alert(window.javaCallback);
+            window.javaCallback.log("Points успешно отправлены на сервер.");
+        }).catch(() => {
+            alert(window.javaCallback);
+            window.javaCallback.log("Упс, что-то пошло не так...");
     });
 }
