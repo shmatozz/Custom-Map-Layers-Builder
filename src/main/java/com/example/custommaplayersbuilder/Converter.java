@@ -27,7 +27,11 @@ public class Converter {
 
         /* Add existing features to collections */
         if (!points.isEmpty() || !customPoints.isEmpty()) {
-            features.put(createPointsFeature(points, customPoints));
+            JSONArray pointsArray = createPointsFeature(points, customPoints).getJSONArray("features");
+
+            for (int i = 0; i < pointsArray.length(); i++) {
+                features.put(pointsArray.getJSONObject(i));
+            }
         }
         if (line.length > 0) {
             features.put(createFeature("LineString", line));
