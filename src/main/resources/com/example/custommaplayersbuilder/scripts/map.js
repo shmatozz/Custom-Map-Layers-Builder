@@ -37,9 +37,7 @@ function initMap() {
     map.events.add('click', onClickListenerHandler);
 
     searchControl.events.add('clear', function () {
-        const searchPointsButton =  document.getElementById('getSearchPointsButton')
-
-        searchPointsButton.style.display = 'none';
+        searchPoints = [];
     }, this);
 
     searchControl.events.add('load', function() {
@@ -60,13 +58,6 @@ function initMap() {
                 color: ""
             });
         }
-
-        const searchPointsButton =  document.getElementById('getSearchPointsButton');
-
-        searchPointsButton.style.display = 'block';
-        searchPointsButton.addEventListener('click', function () {
-            window.sendPoints(customPoints, searchPoints, map.getBounds(), searchControl.getRequestString());
-        });
 
         alert(window.javaCallback);
         window.javaCallback.addPoints(coordResults, request);
@@ -123,12 +114,6 @@ function processCustomPoint(jsonData) {
         color: data['color']
     });
 
-    if (points.length < 2) {
-        const searchPointsButton =  document.getElementById('getSearchPointsButton')
-
-        searchPointsButton.style.display = 'block';
-        searchPointsButton.addEventListener('click', sendPointsToServer);
-    }
     if (points.length === 2) {
         const buildRouteButton =  document.getElementById('routeButton')
         const buildLineButton =  document.getElementById('lineButton')
@@ -177,10 +162,6 @@ function buildRoute() {
         route.coordinates = allCoordinates
         route.bounds = [[minLatitude, minLongitude], [maxLatitude, maxLongitude]];
 
-        const sendRouteButton =  document.getElementById('sendRouteButton')
-        sendRouteButton.style.display = 'block';
-        sendRouteButton.addEventListener('click', sendRouteToServer);
-
         alert(window.javaCallback);
         window.javaCallback.addRoute(allCoordinates);
         window.javaCallback.log("Маршрут построен.");
@@ -194,10 +175,6 @@ function buildLine() {
     line.geometry.setCoordinates(points);
     map.geoObjects.add(line);
 
-    const sendLineButton =  document.getElementById('sendLineButton')
-    sendLineButton.style.display = 'block';
-    sendLineButton.addEventListener('click', sendLineToServer);
-
     alert(window.javaCallback);
     window.javaCallback.addLine(points);
     window.javaCallback.log("Линия построена.");
@@ -206,10 +183,6 @@ function buildLine() {
 function buildPolygon() {
     polygon.geometry.setCoordinates([points.concat([points[0]])]);
     map.geoObjects.add(polygon);
-
-    const sendPolygonButton =  document.getElementById('sendPolygonButton')
-    sendPolygonButton.style.display = 'block';
-    sendPolygonButton.addEventListener('click', sendPolygonToServer);
 
     alert(window.javaCallback);
     window.javaCallback.addPolygon(polygon.geometry.getCoordinates());
