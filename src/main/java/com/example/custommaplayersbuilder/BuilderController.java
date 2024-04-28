@@ -177,7 +177,6 @@ public class BuilderController {
             SetupPlacemarkController dialogController = loader.getController();
             dialogController.setStage(dialogStage);
             dialogController.setPoints(points);
-            dialogController.setWebView(webView);
 
             dialogStage.showAndWait();
 

@@ -1,6 +1,5 @@
 package com.example.custommaplayersbuilder;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
@@ -24,14 +23,9 @@ public class SetupPlacemarkController {
     public ColorPicker colorPicker;
 
     private Stage stage;
-    private WebView webView;
 
     public void setStage(Stage stage) {
         this.stage = stage;
-    }
-
-    public void setWebView(WebView webView) {
-        this.webView = webView;
     }
 
     public void setPoints(double[] points) {
