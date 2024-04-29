@@ -2,6 +2,7 @@ package com.example.custommaplayersbuilder;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
@@ -16,6 +17,8 @@ public class DialogController {
 
     @FXML
     private Button pathSelect;
+    @FXML
+    public CheckBox saveOnServerCheckbox;
     @FXML
     private Button convertAllButton;
     @FXML
@@ -65,7 +68,9 @@ public class DialogController {
             File file = new File(pathSelect.getText());
             String fileNameWithoutExtension = file.getName().replaceFirst("[.][^.]+$", "");
 
-            webView.getEngine().executeScript("sendAllToServer('" + fileNameWithoutExtension + "')");
+            if (saveOnServerCheckbox.isSelected()) {
+                webView.getEngine().executeScript("sendAllToServer('" + fileNameWithoutExtension + "')");
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
             logText.setText("Упс, что-то пошло не так...");
@@ -78,7 +83,9 @@ public class DialogController {
             converter.convertLine(currentLine);
             logText.setText("Линия успешно записана");
 
-            webView.getEngine().executeScript("sendLineToServer()");
+            if (saveOnServerCheckbox.isSelected()) {
+                webView.getEngine().executeScript("sendLineToServer()");
+            }
         } catch (Exception e) {
             logText.setText("Упс, что-то пошло не так...");
         }
@@ -90,7 +97,9 @@ public class DialogController {
             converter.convertPolygon(currentPolygon);
             logText.setText("Полигон успешно записан");
 
-            webView.getEngine().executeScript("sendPolygonToServer()");
+            if (saveOnServerCheckbox.isSelected()) {
+                webView.getEngine().executeScript("sendPolygonToServer()");
+            }
         } catch (Exception e) {
             logText.setText("Упс, что-то пошло не так...");
         }
@@ -102,7 +111,9 @@ public class DialogController {
             converter.convertPoints(currentPoints, currentCustomPoints);
             logText.setText("Точки успешно записаны");
 
-            webView.getEngine().executeScript("sendPointsToServer()");
+            if (saveOnServerCheckbox.isSelected()) {
+                webView.getEngine().executeScript("sendPointsToServer()");
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
             logText.setText("Упс, что-то пошло не так...");
@@ -115,7 +126,9 @@ public class DialogController {
             converter.convertRoute(currentRoute);
             logText.setText("Маршрут успешно записан");
 
-            webView.getEngine().executeScript("sendRouteToServer()");
+            if (saveOnServerCheckbox.isSelected()) {
+                webView.getEngine().executeScript("sendRouteToServer()");
+            }
         } catch (Exception e) {
             logText.setText("Упс, что-то пошло не так...");
         }
