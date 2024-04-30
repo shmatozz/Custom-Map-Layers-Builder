@@ -122,7 +122,7 @@ window.sendAll = function createFeatureCollection(customPoints, searchPoints, li
         allFeatures.push(feature);
     }
 
-    if (polygon.geometry.getCoordinates().length > 0) {
+    if (polygon.geometry.getCoordinates()[0].length > 0) {
         const feature = {
             type: "Feature",
             geometry: {
