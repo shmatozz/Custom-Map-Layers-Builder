@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
-import javafx.scene.web.WebView;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 
@@ -39,9 +39,18 @@ public class SetupPlacemarkController {
         data.put("header", headerInput.getText());
         data.put("body", textInput.getText());
         data.put("hint", hintInput.getText());
-        data.put("color", colorPicker.getValue().toString());
+        data.put("color", getColor());
 
         return data;
+    }
+
+    private String getColor() {
+        Color selectedColor = colorPicker.getValue();
+
+        return String.format("#%02X%02X%02X",
+                (int) (selectedColor.getRed() * 255),
+                (int) (selectedColor.getGreen() * 255),
+                (int) (selectedColor.getBlue() * 255));
     }
 
     @FXML

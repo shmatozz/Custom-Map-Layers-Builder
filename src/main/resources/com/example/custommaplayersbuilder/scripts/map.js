@@ -86,7 +86,7 @@ function processCustomPoint(jsonData) {
         balloonContentHeader: data['header'],
         balloonContentBody: data['body']
     }, {
-        iconColor: '#' + data['color'].substring(2),
+        iconColor: data['color'],
         draggable: true
     });
 
