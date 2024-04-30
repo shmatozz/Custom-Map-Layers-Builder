@@ -79,7 +79,6 @@ function processCustomPoint(jsonData) {
 
     alert(window.javaCallback);
     var coords = data['coords'].toString().split(',').map(parseFloat);
-    [coords[0], coords[1]] = [coords[1], coords[0]];
 
     var marker = new ymaps.Placemark(coords, {
         hintContent: data['hint'],
@@ -160,7 +159,7 @@ function buildRoute() {
         }
 
         route.coordinates = allCoordinates
-        route.bounds = [minLatitude, minLongitude, maxLatitude, maxLongitude];
+        route.bounds = [[minLatitude, minLongitude], [maxLatitude, maxLongitude]];
 
         alert(window.javaCallback);
         window.javaCallback.addRoute(allCoordinates);

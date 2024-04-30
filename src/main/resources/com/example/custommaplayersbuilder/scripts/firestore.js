@@ -15,15 +15,19 @@ const db = firebase.firestore();
 
 window.sendLine = function(coordinates, bounds, docName = "Line") {
     db.collection("geofiles").doc(docName).set({
-        type: "Feature",
-        geometry: {
-            type: "LineString",
-            coordinates: coordinates.toString()
-        },
-        bbox: [bounds[0][0], bounds[0][1], bounds[1][0], bounds[1][1]],
-        properties: {
-            name: docName
-        }
+        type: "FeatureCollection",
+        features: [{
+            type: "Feature",
+            geometry: {
+                type: "LineString",
+                coordinates: coordinates.toString()
+            },
+            bbox: [bounds[0][0], bounds[0][1], bounds[1][0], bounds[1][1]],
+            properties: {
+                name: docName
+            }
+        }],
+        bbox: [bounds[0][0], bounds[0][1], bounds[1][0], bounds[1][1]]
     }).then(() => {
         alert(window.javaCallback);
         window.javaCallback.log(docName + " успешно отправлен на сервер.");
@@ -35,15 +39,19 @@ window.sendLine = function(coordinates, bounds, docName = "Line") {
 
 window.sendPolygon = function(coordinates, bounds) {
     db.collection("geofiles").doc("Polygon").set({
-        type: "Feature",
-        geometry: {
-            type: "Polygon",
-            coordinates: coordinates.toString()
-        },
-        bbox: [bounds[0][0], bounds[0][1], bounds[1][0], bounds[1][1]],
-        properties: {
-            name: "Polygon"
-        }
+        type: "FeatureCollection",
+        features: [{
+            type: "Feature",
+            geometry: {
+                type: "Polygon",
+                coordinates: coordinates.toString()
+            },
+            bbox: [bounds[0][0], bounds[0][1], bounds[1][0], bounds[1][1]],
+            properties: {
+                name: "Polygon"
+            }
+        }],
+        bbox: [bounds[0][0], bounds[0][1], bounds[1][0], bounds[1][1]]
     }).then(() => {
         alert(window.javaCallback);
         window.javaCallback.log("Polygon успешно отправлен на сервер.");
@@ -150,7 +158,7 @@ window.sendAll = function createFeatureCollection(customPoints, searchPoints, li
                 type: "LineString",
                 coordinates: route.coordinates.toString()
             },
-            bbox: route.bounds,
+            bbox: [route.bounds[0][0], route.bounds[0][1], route.bounds[1][0], route.bounds[1][1]],
             properties: {
                 name: "Route"
             }

@@ -53,19 +53,33 @@ public class Converter {
     }
 
     public void convertLine(double[][] line) throws IOException {
-        /* Creating JSON object of LINE feature */
-        JSONObject lineObject = createFeature("LineString", line);
+        JSONObject featureCollection = new JSONObject();
+        JSONArray features = new JSONArray();
+
+        /* Creating JSON object of LINE (route) feature */
+        features.put(createFeature("LineString", line));
+
+        featureCollection.put("type", "FeatureCollection");
+        featureCollection.put("features", features);
+        featureCollection.put("bbox", getFeatureCollectionBbox(features));
 
         /* Write created object to file */
-        writeToFile(lineObject);
+        writeToFile(featureCollection);
     }
 
     public void convertPolygon(double[][] polygon) throws IOException {
+        JSONObject featureCollection = new JSONObject();
+        JSONArray features = new JSONArray();
+
         /* Creating JSON object of POLYGON feature */
-        JSONObject polygonObject = createFeature("Polygon", polygon);
+        features.put(createFeature("Polygon", polygon));
+
+        featureCollection.put("type", "FeatureCollection");
+        featureCollection.put("features", features);
+        featureCollection.put("bbox", getFeatureCollectionBbox(features));
 
         /* Write created object to file */
-        writeToFile(polygonObject);
+        writeToFile(featureCollection);
     }
 
     public void convertPoints(ArrayList<JSONObject> points, ArrayList<JSONObject> customPoints) throws IOException {
@@ -74,14 +88,6 @@ public class Converter {
 
         /* Write created object to file */
         writeToFile(pointsObject);
-    }
-
-    public void convertRoute(double[][] route) throws IOException {
-        /* Creating JSON object of ROUTE (LineString) feature */
-        JSONObject routeObject = createFeature("LineString", route);
-
-        /* Write created object to file */
-        writeToFile(routeObject);
     }
 
     private void writeToFile(JSONObject object) throws IOException {
@@ -151,8 +157,8 @@ public class Converter {
         if (!points.isEmpty()) {
             for (JSONObject point : points) {
                 double[] pointCoords = new double[2];
-                pointCoords[0] = point.getJSONArray("coords").getDouble(1);
-                pointCoords[1] = point.getJSONArray("coords").getDouble(0);
+                pointCoords[0] = point.getJSONArray("coords").getDouble(0);
+                pointCoords[1] = point.getJSONArray("coords").getDouble(1);
                 JSONObject pointFeature = createFeature("Point", new double[][] { pointCoords });
 
                 pointFeature.getJSONObject("properties").put("header", point.get("header"));
