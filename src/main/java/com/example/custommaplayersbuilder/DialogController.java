@@ -123,7 +123,7 @@ public class DialogController {
     @FXML
     private void convertRoute() {
         try {
-            converter.convertRoute(currentRoute);
+            converter.convertLine(currentRoute);
             logText.setText("Маршрут успешно записан");
 
             if (saveOnServerCheckbox.isSelected()) {

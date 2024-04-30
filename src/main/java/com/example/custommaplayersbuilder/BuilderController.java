@@ -112,7 +112,6 @@ public class BuilderController {
          * @param points - JSObject string with coords
          */
         public void openPointCreateDialog(Object points) {
-            System.out.println();
             onCreatePlacemark(parseObject(points.toString())[0]);
         }
 
@@ -138,8 +137,8 @@ public class BuilderController {
             for (int i = 0; i < numPoints; i++) {
                 double x = Double.parseDouble(coordinatesArray[2 * i]);
                 double y = Double.parseDouble(coordinatesArray[2 * i + 1]);
-                points[i][0] = y;
-                points[i][1] = x;
+                points[i][0] = x;
+                points[i][1] = y;
             }
 
             return points;
