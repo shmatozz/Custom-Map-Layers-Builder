@@ -46,6 +46,7 @@ public class Converter {
         /* Put created fields to JSON Object */
         featureCollection.put("type", "FeatureCollection");
         featureCollection.put("features", features);
+        featureCollection.put("bbox", getFeatureCollectionBbox(features));
 
         /* Write created object to file */
         writeToFile(featureCollection);
@@ -112,14 +113,12 @@ public class Converter {
         /* Creating properties (name, bounding box) */
         JSONObject properties = new JSONObject();
         properties.put("name", geometryType);
-        if (coordinates.length > 0) {
-            properties.put("bbox", getBoundingBox(coordinates));
-        }
 
         /* Put all fields to feature */
         feature.put("type", "Feature");
         feature.put("geometry", geometry);
         feature.put("properties", properties);
+        feature.put("bbox", getBoundingBox(coordinates));
 
         return feature;
     }
@@ -132,7 +131,7 @@ public class Converter {
      */
     private JSONObject createPointsFeature(ArrayList<JSONObject> points, ArrayList<JSONObject> customPoints) {
         JSONObject feature = new JSONObject();
-        ArrayList<JSONObject> features = new ArrayList<>();
+        JSONArray features = new JSONArray();
 
         feature.put("type", "FeatureCollection");
 
@@ -145,25 +144,29 @@ public class Converter {
                 pointFeature.getJSONObject("properties").put("hint", point.get("hint"));
                 pointFeature.getJSONObject("properties").put("color", point.get("color"));
 
-                features.add(pointFeature);
+                features.put(pointFeature);
             }
         }
 
         if (!points.isEmpty()) {
             for (JSONObject point : points) {
                 double[] pointCoords = new double[2];
-                pointCoords[0] = point.getJSONArray("coords").getDouble(0);
-                pointCoords[1] = point.getJSONArray("coords").getDouble(1);
+                pointCoords[0] = point.getJSONArray("coords").getDouble(1);
+                pointCoords[1] = point.getJSONArray("coords").getDouble(0);
                 JSONObject pointFeature = createFeature("Point", new double[][] { pointCoords });
 
                 pointFeature.getJSONObject("properties").put("header", point.get("header"));
+                pointFeature.getJSONObject("properties").put("body", "");
+                pointFeature.getJSONObject("properties").put("hint", point.get("header"));
+                pointFeature.getJSONObject("properties").put("color","");
 
-                features.add(pointFeature);
+                features.put(pointFeature);
             }
         }
 
         feature.put("type", "FeatureCollection");
         feature.put("features", features);
+        feature.put("bbox", getFeatureCollectionBbox(features));
 
         return feature;
     }
@@ -186,6 +189,29 @@ public class Converter {
             minY = Math.min(minY, y);
             maxX = Math.max(maxX, x);
             maxY = Math.max(maxY, y);
+        }
+
+        return new double[]{minX, minY, maxX, maxY};
+    }
+
+    /**
+     * Calculating bounding box by given JSON array of features
+     * @param features array of features
+     * @return array of 4 bounds as coordinates
+     */
+    private double[] getFeatureCollectionBbox(JSONArray features) {
+        double minX = Double.MAX_VALUE;
+        double minY = Double.MAX_VALUE;
+        double maxX = Double.MIN_VALUE;
+        double maxY = Double.MIN_VALUE;
+
+        for (int i = 0; i < features.length(); i++) {
+            JSONObject feature = (JSONObject) features.get(i);
+            double[] bbox = (double[]) feature.get("bbox");
+            minX = Math.min(minX, bbox[0]);
+            minY = Math.min(minY, bbox[1]);
+            maxX = Math.max(maxX, bbox[2]);
+            maxY = Math.max(maxY, bbox[3]);
         }
 
         return new double[]{minX, minY, maxX, maxY};

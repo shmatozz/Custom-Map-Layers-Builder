@@ -160,7 +160,7 @@ function buildRoute() {
         }
 
         route.coordinates = allCoordinates
-        route.bounds = [[minLatitude, minLongitude], [maxLatitude, maxLongitude]];
+        route.bounds = [minLatitude, minLongitude, maxLatitude, maxLongitude];
 
         alert(window.javaCallback);
         window.javaCallback.addRoute(allCoordinates);

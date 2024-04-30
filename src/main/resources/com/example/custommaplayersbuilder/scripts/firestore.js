@@ -20,9 +20,9 @@ window.sendLine = function(coordinates, bounds, docName = "Line") {
             type: "LineString",
             coordinates: coordinates.toString()
         },
+        bbox: [bounds[0][0], bounds[0][1], bounds[1][0], bounds[1][1]],
         properties: {
-            name: docName,
-            bbox: [bounds[0][1], bounds[0][0], bounds[1][1], bounds[1][0]]
+            name: docName
         }
     }).then(() => {
         alert(window.javaCallback);
@@ -40,9 +40,9 @@ window.sendPolygon = function(coordinates, bounds) {
             type: "Polygon",
             coordinates: coordinates.toString()
         },
+        bbox: [bounds[0][0], bounds[0][1], bounds[1][0], bounds[1][1]],
         properties: {
-            name: "Polygon",
-            bbox: [bounds[0][1], bounds[0][0], bounds[1][1], bounds[1][0]]
+            name: "Polygon"
         }
     }).then(() => {
         alert(window.javaCallback);
@@ -63,6 +63,7 @@ window.sendPoints = function(customPoints, searchPoints, bounds, docName = "Poin
                 type: "Point",
                 coordinates: point.coords
             },
+            bbox: point.coords.concat(point.coords),
             properties: {
                 hint: point.hint,
                 header: point.header,
@@ -74,7 +75,8 @@ window.sendPoints = function(customPoints, searchPoints, bounds, docName = "Poin
 
     const featureCollection = {
         type: "FeatureCollection",
-        features: features
+        features: features,
+        bbox: getFeatureCollectionBbox(features)
     };
 
     db.collection("geofiles").doc(docName).set(featureCollection)
@@ -98,6 +100,7 @@ window.sendAll = function createFeatureCollection(customPoints, searchPoints, li
                 type: "Point",
                 coordinates: point.coords
             },
+            bbox: point.coords.concat(point.coords),
             properties: {
                 hint: point.hint,
                 header: point.header,
@@ -109,12 +112,14 @@ window.sendAll = function createFeatureCollection(customPoints, searchPoints, li
     });
 
     if (line.geometry.getCoordinates().length > 0) {
+        let bounds = line.geometry.getBounds()
         const feature = {
             type: "Feature",
             geometry: {
                 type: "LineString",
                 coordinates: line.geometry.getCoordinates().toString()
             },
+            bbox: [bounds[0][0], bounds[0][1], bounds[1][0], bounds[1][1]],
             properties: {
                 name: "Line"
             }
@@ -123,12 +128,14 @@ window.sendAll = function createFeatureCollection(customPoints, searchPoints, li
     }
 
     if (polygon.geometry.getCoordinates()[0].length > 0) {
+        let bounds = polygon.geometry.getBounds()
         const feature = {
             type: "Feature",
             geometry: {
                 type: "Polygon",
                 coordinates: polygon.geometry.getCoordinates().toString()
             },
+            bbox: [bounds[0][0], bounds[0][1], bounds[1][0], bounds[1][1]],
             properties: {
                 name: "Polygon"
             }
@@ -143,6 +150,7 @@ window.sendAll = function createFeatureCollection(customPoints, searchPoints, li
                 type: "LineString",
                 coordinates: route.coordinates.toString()
             },
+            bbox: route.bounds,
             properties: {
                 name: "Route"
             }
@@ -152,7 +160,8 @@ window.sendAll = function createFeatureCollection(customPoints, searchPoints, li
 
     const featureCollection = {
         type: "FeatureCollection",
-        features: allFeatures
+        features: allFeatures,
+        bbox: getFeatureCollectionBbox(allFeatures)
     };
 
     db.collection("geofiles").doc(docName.toString()).set(featureCollection)
@@ -163,4 +172,22 @@ window.sendAll = function createFeatureCollection(customPoints, searchPoints, li
             alert(window.javaCallback);
             window.javaCallback.log("Упс, что-то пошло не так...");
     });
+}
+
+function getFeatureCollectionBbox(features) {
+    let minX = Number.MAX_VALUE;
+    let minY = Number.MAX_VALUE;
+    let maxX = Number.MIN_VALUE;
+    let maxY = Number.MIN_VALUE;
+
+    for (let i = 0; i < features.length; i++) {
+        let feature = features[i];
+        let bbox = feature['bbox'];
+        minX = Math.min(minX, bbox[0]);
+        minY = Math.min(minY, bbox[1]);
+        maxX = Math.max(maxX, bbox[2]);
+        maxY = Math.max(maxY, bbox[3]);
+    }
+
+    return [minX, minY, maxX, maxY];
 }
