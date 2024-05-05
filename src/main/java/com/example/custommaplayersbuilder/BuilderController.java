@@ -179,16 +179,17 @@ public class BuilderController {
 
             dialogStage.showAndWait();
 
-            /* Get new custom point data */
-            JSONObject data = dialogController.getEnteredData();
-            currentCustomPoints.add(data);
+            if (dialogController.isPointCreated) {
+                /* Get new custom point data */
+                JSONObject data = dialogController.getEnteredData();
+                currentCustomPoints.add(data);
 
-            System.out.println(data.toString());
+                System.out.println(data.toString());
 
-            /* Pass new custom point data to WebView */
-            if (!data.isEmpty()) {
+                /* Pass new custom point data to WebView */
                 webView.getEngine().executeScript("processCustomPoint('" + data + "')");
             }
+
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

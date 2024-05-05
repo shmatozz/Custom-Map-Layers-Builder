@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 public class SetupPlacemarkController {
     private double[] points;
+    public boolean isPointCreated;
 
     @FXML
     public Button createPlacemark;
@@ -55,6 +56,7 @@ public class SetupPlacemarkController {
 
     @FXML
     public void createPlacemark() {
+        isPointCreated = true;
         stage.close();
     }
 }
