@@ -48,12 +48,13 @@ dependencies {
   implementation('org.openjfx:javafx-web:16')
   implementation("org.json:json:20240303")
 
-  testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+  testImplementation("junit:junit:4.13.2")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }
 
 test {
-useJUnitPlatform()}
+  useJUnit()
+}
 
 jlink {
   imageZip = project.file("${buildDir}/distributions/app-${javafx.platform.classifier}.zip")
