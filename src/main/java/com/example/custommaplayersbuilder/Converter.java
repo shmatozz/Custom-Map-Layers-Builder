@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Converter {
     private final String outputPath;
 
-    Converter(String outputPath) {
+    public Converter(String outputPath) {
         this.outputPath = outputPath;
     }
 
@@ -102,7 +102,7 @@ public class Converter {
      * @param coordinates coordinates array
      * @return JSONObject of built feature
      */
-    private JSONObject createFeature(String geometryType, double[][] coordinates) {
+    public JSONObject createFeature(String geometryType, double[][] coordinates) {
         JSONObject feature = new JSONObject();
 
         /* Creating geometry */
@@ -135,7 +135,7 @@ public class Converter {
      * @param customPoints array of custom points
      * @return JSONObject of built feature
      */
-    private JSONObject createPointsFeature(ArrayList<JSONObject> points, ArrayList<JSONObject> customPoints) {
+    public JSONObject createPointsFeature(ArrayList<JSONObject> points, ArrayList<JSONObject> customPoints) {
         JSONObject feature = new JSONObject();
         JSONArray features = new JSONArray();
 
@@ -182,7 +182,7 @@ public class Converter {
      * @param coordinates array of coordinates
      * @return array of 4 bounds as coordinates
      */
-    private double[] getBoundingBox(double[][] coordinates) {
+    public double[] getBoundingBox(double[][] coordinates) {
         double minX = Double.MAX_VALUE;
         double minY = Double.MAX_VALUE;
         double maxX = Double.MIN_VALUE;
@@ -205,7 +205,7 @@ public class Converter {
      * @param features array of features
      * @return array of 4 bounds as coordinates
      */
-    private double[] getFeatureCollectionBbox(JSONArray features) {
+    public double[] getFeatureCollectionBbox(JSONArray features) {
         double minX = Double.MAX_VALUE;
         double minY = Double.MAX_VALUE;
         double maxX = Double.MIN_VALUE;
