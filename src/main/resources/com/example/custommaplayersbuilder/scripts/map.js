@@ -66,7 +66,6 @@ function initMap() {
 
     function onClickListenerHandler(event) {
         var coords = event.get('coords');
-        points.push(coords);
 
         alert(window.javaCallback);
         window.javaCallback.openPointCreateDialog(coords);
@@ -105,6 +104,7 @@ function processCustomPoint(jsonData) {
 
     map.geoObjects.add(marker);
 
+    points.push(coords);
     customPoints.push({
         coords: coords,
         hint: data['hint'],
