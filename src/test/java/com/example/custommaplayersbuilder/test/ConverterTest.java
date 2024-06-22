@@ -18,8 +18,9 @@ public class ConverterTest{
         double[] pointCoords = {1.0, 2.0};
         JSONObject pointFeature = converter.createFeature("Point", new double[][]{pointCoords});
 
+        double[] LngLatCoords = {2.0, 1.0};
         assertEquals("Point", pointFeature.getJSONObject("geometry").getString("type"));
-        assertArrayEquals(pointCoords, ((double[]) pointFeature.getJSONObject("geometry").get("coordinates")), 0.001);
+        assertArrayEquals(LngLatCoords, ((double[]) pointFeature.getJSONObject("geometry").get("coordinates")), 0.001);
         assertEquals("Point", pointFeature.getJSONObject("properties").getString("name"));
     }
 

@@ -104,16 +104,24 @@ public class Converter {
      */
     public JSONObject createFeature(String geometryType, double[][] coordinates) {
         JSONObject feature = new JSONObject();
+        double[] bbox = getBoundingBox(coordinates);
+        double[][] coords = new double[coordinates.length][2];
+
+        /* Swap LatLng to LngLat */
+        for (int i = 0; i < coords.length; i++) {
+            coords[i][0] = coordinates[i][1];
+            coords[i][1] = coordinates[i][0];
+        }
 
         /* Creating geometry */
         JSONObject geometry = new JSONObject();
         geometry.put("type", geometryType);
         if (Objects.equals(geometryType, "Polygon")) {
-            geometry.put("coordinates", new double[][][]{coordinates});
+            geometry.put("coordinates", new double[][][]{coords});
         } else if (Objects.equals(geometryType, "Point")) {
-            geometry.put("coordinates", coordinates[0]);
+            geometry.put("coordinates", coords[0]);
         } else {
-            geometry.put("coordinates", coordinates);
+            geometry.put("coordinates", coords);
         }
 
         /* Creating properties (name, bounding box) */
@@ -124,7 +132,7 @@ public class Converter {
         feature.put("type", "Feature");
         feature.put("geometry", geometry);
         feature.put("properties", properties);
-        feature.put("bbox", getBoundingBox(coordinates));
+        feature.put("bbox", bbox);
 
         return feature;
     }
@@ -162,7 +170,7 @@ public class Converter {
                 JSONObject pointFeature = createFeature("Point", new double[][] { pointCoords });
 
                 pointFeature.getJSONObject("properties").put("header", point.get("header"));
-                pointFeature.getJSONObject("properties").put("body", "");
+                pointFeature.getJSONObject("properties").put("body", "This point is a result for: " + point.get("header"));
                 pointFeature.getJSONObject("properties").put("hint", point.get("header"));
                 pointFeature.getJSONObject("properties").put("color","");
 

@@ -108,6 +108,15 @@ public class BuilderController {
         }
 
         /**
+         *
+         */
+        public void updatePoint(int index, Object new_coords) {
+            double[][] parsedPointsCoords = parseObject(new_coords.toString());
+
+            currentCustomPoints.get(index).put("coords", parsedPointsCoords[0]);
+        }
+
+        /**
          * Open dialog window to set up custom
          * @param points - JSObject string with coords
          */

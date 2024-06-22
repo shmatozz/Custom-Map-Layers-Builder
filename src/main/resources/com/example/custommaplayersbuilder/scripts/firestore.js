@@ -14,13 +14,18 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 window.sendLine = function(coordinates, bounds, docName = "Line") {
+    const coords = []
+    for (let i = 0; i < coordinates.length; i++) {
+        coords.push([coordinates[i][1], coordinates[i][0]])
+    }
+
     db.collection("geofiles").doc(docName).set({
         type: "FeatureCollection",
         features: [{
             type: "Feature",
             geometry: {
                 type: "LineString",
-                coordinates: coordinates.toString()
+                coordinates: coords.toString()
             },
             bbox: [bounds[0][0], bounds[0][1], bounds[1][0], bounds[1][1]],
             properties: {
@@ -38,13 +43,18 @@ window.sendLine = function(coordinates, bounds, docName = "Line") {
 }
 
 window.sendPolygon = function(coordinates, bounds) {
+    const coords = []
+    for (let i = 0; i < coordinates[0].length; i++) {
+        coords.push([coordinates[0][i][1], coordinates[0][i][0]])
+    }
+
     db.collection("geofiles").doc("Polygon").set({
         type: "FeatureCollection",
         features: [{
             type: "Feature",
             geometry: {
                 type: "Polygon",
-                coordinates: coordinates.toString()
+                coordinates: coords.toString()
             },
             bbox: [bounds[0][0], bounds[0][1], bounds[1][0], bounds[1][1]],
             properties: {
@@ -69,7 +79,7 @@ window.sendPoints = function(customPoints, searchPoints, bounds, docName = "Poin
             type: "Feature",
             geometry: {
                 type: "Point",
-                coordinates: point.coords
+                coordinates: [point.coords[1], point.coords[0]]
             },
             bbox: point.coords.concat(point.coords),
             properties: {
@@ -106,7 +116,7 @@ window.sendAll = function createFeatureCollection(customPoints, searchPoints, li
             type: "Feature",
             geometry: {
                 type: "Point",
-                coordinates: point.coords
+                coordinates: [point.coords[1], point.coords[0]]
             },
             bbox: point.coords.concat(point.coords),
             properties: {
@@ -121,11 +131,17 @@ window.sendAll = function createFeatureCollection(customPoints, searchPoints, li
 
     if (line.geometry.getCoordinates().length > 0) {
         let bounds = line.geometry.getBounds()
+        const coords = []
+        const coordinates = line.geometry.getCoordinates()
+        for (let i = 0; i < coordinates.length; i++) {
+            coords.push([coordinates[i][1], coordinates[i][0]])
+        }
+
         const feature = {
             type: "Feature",
             geometry: {
                 type: "LineString",
-                coordinates: line.geometry.getCoordinates().toString()
+                coordinates: coords.toString()
             },
             bbox: [bounds[0][0], bounds[0][1], bounds[1][0], bounds[1][1]],
             properties: {
@@ -137,11 +153,17 @@ window.sendAll = function createFeatureCollection(customPoints, searchPoints, li
 
     if (polygon.geometry.getCoordinates()[0].length > 0) {
         let bounds = polygon.geometry.getBounds()
+        const coords = []
+        const coordinates = polygon.geometry.getCoordinates()
+        for (let i = 0; i < coordinates[0].length; i++) {
+            coords.push([coordinates[0][i][1], coordinates[0][i][0]])
+        }
+
         const feature = {
             type: "Feature",
             geometry: {
                 type: "Polygon",
-                coordinates: polygon.geometry.getCoordinates().toString()
+                coordinates: coords.toString()
             },
             bbox: [bounds[0][0], bounds[0][1], bounds[1][0], bounds[1][1]],
             properties: {
@@ -152,11 +174,17 @@ window.sendAll = function createFeatureCollection(customPoints, searchPoints, li
     }
 
     if (route.coordinates.length > 0) {
+        const coords = []
+        const coordinates = route.coordinates
+        for (let i = 0; i < coordinates.length; i++) {
+            coords.push([coordinates[i][1], coordinates[i][0]])
+        }
+
         const feature = {
             type: "Feature",
             geometry: {
                 type: "LineString",
-                coordinates: route.coordinates.toString()
+                coordinates: coords.toString()
             },
             bbox: [route.bounds[0][0], route.bounds[0][1], route.bounds[1][0], route.bounds[1][1]],
             properties: {

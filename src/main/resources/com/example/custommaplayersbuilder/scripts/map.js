@@ -54,7 +54,7 @@ function initMap() {
                 coords: resultCoordinates,
                 hint: request,
                 header: request,
-                body: "",
+                body: "This point is a result for: " + request,
                 color: ""
             });
         }
@@ -100,6 +100,9 @@ function processCustomPoint(jsonData) {
     marker.events.add('dragend', function () {
         points[pointIndex] = marker.geometry.getCoordinates();
         customPoints[pointIndex].coords = marker.geometry.getCoordinates();
+
+        alert(window.javaCallback);
+        window.javaCallback.updatePoint(pointIndex, marker.geometry.getCoordinates());
     });
 
     map.geoObjects.add(marker);
